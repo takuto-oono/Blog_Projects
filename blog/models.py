@@ -1,4 +1,3 @@
-from difflib import IS_CHARACTER_JUNK
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -20,4 +19,12 @@ class Article(models.Model):
         return self.title
 
     class Meta:
-        verbose_name_plural = ('記事')
+        verbose_name_plural = '記事'
+
+
+class Comment(models.Model):
+    content = models.CharField(max_length=1000, verbose_name='コメント内容')
+    article = models.ForeignKey('Article', related_name='article', on_delete=models.CASCADE, verbose_name='対象記事')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='投稿者')
+    date = models.DateField(verbose_name='公開日')
+    goods = models.IntegerField(default=0, verbose_name='いいね')
