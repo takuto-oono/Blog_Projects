@@ -4,7 +4,7 @@ from .models import Article, Comment
 
 class ArticleAdmin(admin.ModelAdmin):
     fields = ['title', 'content', 'create_user_id',
-              'public_settings', 'public_date']
+              'is_public', 'public_date']
 
 
 admin.site.register(Article, ArticleAdmin)
