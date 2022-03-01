@@ -14,7 +14,7 @@ class Article(models.Model):
     is_public = models.BooleanField(
         default=False, choices=PUBLIC_SETTINGS_CHOICES, verbose_name='公開設定')
     public_date = models.DateField(verbose_name='公開日')
-    goods = models.IntegerField(default=0, verbose_name='いいね')
+    article_goods = models.IntegerField(default=0, verbose_name='いいね')
 
     def __str__(self):
         return self.title
@@ -28,4 +28,4 @@ class Comment(models.Model):
     article = models.ForeignKey('Article', related_name='article', on_delete=models.CASCADE, verbose_name='対象記事')
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='投稿者')
     date = models.DateField(verbose_name='公開日')
-    goods = models.IntegerField(default=0, verbose_name='いいね')
+    comment_goods = models.IntegerField(default=0, verbose_name='いいね')
