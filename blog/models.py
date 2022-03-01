@@ -29,3 +29,9 @@ class Comment(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='投稿者')
     date = models.DateField(verbose_name='公開日')
     comment_goods = models.IntegerField(default=0, verbose_name='いいね')
+
+    def __str__(self):
+        return self.content
+
+    class Meta:
+        verbose_name_plural = 'コメント'
