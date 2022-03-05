@@ -2,6 +2,8 @@ from django.test import TestCase
 from blog.models import Article, Comment
 from custom_users.models import User
 from datetime import date
+from django.db import IntegrityError, transaction
+
 
 
 class ArticleModelTests(TestCase):
@@ -12,14 +14,20 @@ class ArticleModelTests(TestCase):
         user.save()
 
     def create_article(self, title, content, user, is_public, public_date, article_goods):
-        article = Article()
-        article.title = title
-        article.content = content
-        article.user = user
-        article.is_public = is_public
-        article.public_date = public_date
-        article.article_goods = article_goods
-        article.save()
+
+        try:
+            with transaction.atomic():
+                article = Article()
+                article.title = title
+                article.content = content
+                article.user = user
+                article.is_public = is_public
+                article.public_date = public_date
+                article.article_goods = article_goods
+                article.save()
+        except IntegrityError:
+            pass
+
 
     def test_is_empty(self):
         saved_article = Article.objects.all()
@@ -65,5 +73,6 @@ class ArticleModelTests(TestCase):
         article_good2 = 0
         self.create_article(title2, content2, user, is_public2, public_date2, article_good2)
         saved_articles = Article.objects.all()
+        print(saved_articles.count())
         self.assertEqual(saved_articles.count(), 1)
         self.assertEqual(saved_articles.first().content, content1)
