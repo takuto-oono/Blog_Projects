@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView
 from . import models
+from django.shortcuts import get_object_or_404
 
 
 class ArticleList(ListView):
@@ -16,7 +17,7 @@ class ArticleDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
-        article = models.Article.objects.get(id=self.kwargs['pk'])
+        article = get_object_or_404(models.Article, id=self.kwargs['pk'], is_public=True)
         context.update({
             'comments': models.Comment.objects.filter(article=article)
         })
