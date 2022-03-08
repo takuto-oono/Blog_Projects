@@ -12,5 +12,9 @@
     <li>
         {{ article.content }}
     </li>
+
+{% for comment in comments %}
+<li>{{ comment.content }}</li>
+{% endfor %}
 </body>
 </html>

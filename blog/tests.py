@@ -5,7 +5,6 @@ from datetime import date
 from django.db import IntegrityError, transaction
 
 
-
 class ArticleModelTests(TestCase):
     def create_user(self, username, password):
         user = User()
@@ -27,7 +26,6 @@ class ArticleModelTests(TestCase):
                 article.save()
         except IntegrityError:
             pass
-
 
     def test_is_empty(self):
         saved_article = Article.objects.all()
@@ -76,3 +74,72 @@ class ArticleModelTests(TestCase):
         print(saved_articles.count())
         self.assertEqual(saved_articles.count(), 1)
         self.assertEqual(saved_articles.first().content, content1)
+
+
+class CommentModelTests(TestCase):
+    def create_user(self, username, password):
+        user = User()
+        user.username = username
+        user.password = password
+        user.save()
+
+    def create_article(self, title, content, user, is_public, public_date, article_goods):
+
+        try:
+            with transaction.atomic():
+                article = Article()
+                article.title = title
+                article.content = content
+                article.user = user
+                article.is_public = is_public
+                article.public_date = public_date
+                article.article_goods = article_goods
+                article.save()
+        except IntegrityError:
+            pass
+
+    def create_comment(self, content, user, article, comment_date, comment_goods):
+        try:
+            with transaction.atomic():
+                comment = Comment()
+                comment.content = content
+                comment.user = user
+                comment.article = article
+                comment.date = comment_date
+                comment.comment_goods = comment_goods
+                comment.save()
+        except IntegrityError:
+            pass
+
+    def test_is_empty(self):
+        saved_comment = Comment.objects.all()
+        self.assertEqual(saved_comment.count(), 0)
+
+    def test_is_count_one(self):
+        username = 'admin'
+        password = 'password'
+        self.create_user(username, password)
+        title = 'title'
+        article_content = 'content'
+        user = User.objects.first()
+        is_public = True
+        public_date = date.fromisoformat('2022-01-24')
+        article_good = 5
+        self.create_article(title, article_content, user, is_public, public_date, article_good)
+        comment_content = 'comment'
+        article = Article.objects.first()
+        comment_date = date.fromisoformat('2022-03-01')
+        comment_goods = 100
+        self.create_comment(comment_content, user, article, comment_date, comment_goods)
+        saved_user = User.objects.all()
+        saved_article = Article.objects.all()
+        saved_comment = Comment.objects.all()
+        self.assertEqual(saved_user.count(), 1)
+        self.assertEqual(saved_article.count(), 1)
+        self.assertEqual(saved_comment.count(), 1)
+        comment = Comment.objects.first()
+        self.assertEqual(comment.content, comment_content)
+        self.assertEqual(comment.user, user)
+        self.assertEqual(comment.article, article)
+        self.assertEqual(comment.date, comment_date)
+        self.assertEqual(comment.comment_goods, comment_goods)
