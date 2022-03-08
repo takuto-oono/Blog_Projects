@@ -3,8 +3,8 @@ from .models import Article, Comment
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    fields = ['title', 'content', 'create_user_id',
-              'is_public', 'public_date']
+    fields = ['title', 'content', 'user',
+              'is_public', 'public_date', 'article_goods']
 
 
 admin.site.register(Article, ArticleAdmin)
@@ -16,7 +16,7 @@ class CommentAdmin(admin.ModelAdmin):
         'user',
         'article',
         'date',
-        'goods',
+        'comment_goods',
     ]
 
 
