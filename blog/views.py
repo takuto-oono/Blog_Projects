@@ -1,6 +1,7 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from . import models
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
 
 
 class ArticleList(ListView):
@@ -25,3 +26,20 @@ class ArticleDetail(DetailView):
 
     def get_queryset(self):
         return models.Article.objects.filter(is_public=True)
+
+
+class CreateCommentView(CreateView):
+    template_name = 'blog/create_comment.html'
+    model = models.Comment
+    fields = ['content']
+
+    def get_success_url(self, **kwargs):
+        return reverse('detail_article', kwargs={'pk': self.kwargs['article_pk']})
+
+    def form_valid(self, form, **kwargs):
+        form = form.save(commit=False)
+        form.article = models.Article.objects.get(pk=self.kwargs['article_pk'])
+        form.user = self.request.user
+        form.save()
+
+        return super().form_valid(form)

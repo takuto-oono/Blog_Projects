@@ -1,9 +1,11 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=50, verbose_name='記事のタイトル', unique=True)
+    title = models.CharField(
+        max_length=50, verbose_name='記事のタイトル', unique=True)
     content = models.CharField(max_length=3000, verbose_name='記事内容')
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, verbose_name='編集者情報')
@@ -25,9 +27,12 @@ class Article(models.Model):
 
 class Comment(models.Model):
     content = models.CharField(max_length=1000, verbose_name='コメント内容')
-    article = models.ForeignKey('Article', related_name='article', on_delete=models.CASCADE, verbose_name='対象記事')
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='投稿者')
-    date = models.DateField(verbose_name='公開日')
+    article = models.ForeignKey(
+        'Article', related_name='article', on_delete=models.CASCADE, verbose_name='対象記事')
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, verbose_name='投稿者')
+    date = models.DateField(
+        verbose_name='公開日', default=timezone.datetime.today())
     comment_goods = models.IntegerField(default=0, verbose_name='いいね')
 
     def __str__(self):
