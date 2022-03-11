@@ -17,8 +17,8 @@ class Article(models.Model):
         default=False, choices=PUBLIC_SETTINGS_CHOICES, verbose_name='公開設定')
     public_date = models.DateField(verbose_name='公開日')
     # article_goods = models.IntegerField(default=0, verbose_name='いいね')
-    good_user = models.ManyToManyField(get_user_model(), verbose_name='高評価ユーザー', related_name='good_user')
-    read_later_user = models.ManyToManyField(get_user_model(), verbose_name='後で読むユーザー', related_name='later_user')
+    good_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='高評価ユーザー', related_name='good_user')
+    read_later_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='後で読むユーザー', related_name='later_user')
 
     def __str__(self):
         return self.title

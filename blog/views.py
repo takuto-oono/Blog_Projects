@@ -20,8 +20,11 @@ class ArticleDetail(DetailView):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
         article = get_object_or_404(models.Article, id=self.kwargs['pk'], is_public=True)
         context.update({
-            'comments': models.Comment.objects.filter(article=article)
+            'comments': models.Comment.objects.filter(article=article),
+            'good_cnt': article.good_user.all().count()
         })
+        print(article.good_user.all())
+
         return context
 
     def get_queryset(self):
