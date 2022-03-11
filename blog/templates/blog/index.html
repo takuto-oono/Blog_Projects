@@ -6,8 +6,11 @@
     <title>Title</title>
 </head>
 <body>
-    {% for article in article_list %}
-        <li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}</a></li>
-    {% endfor %}
+{% for article in article_list %}
+    <li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}</a></li>
+{% endfor %}
+{% for article in good_article_list %}
+    <li>{{ article }}</li>
+{% endfor %}
 </body>
 </html>

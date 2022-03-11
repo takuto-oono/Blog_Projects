@@ -8,19 +8,26 @@ class ArticleList(ListView):
     template_name = 'blog/index.html'
     model = models.Article
 
+    def get_good_article_list(self):
+        good_article_list = []
+        article_list = models.Article.objects.filter(is_public=True)
+        for article in article_list:
+            if self.request.user in article.good_user.all():
+                good_article_list.append(article)
+        return good_article_list
+
     def get_context_data(self, **kwargs):
         context = super(ArticleList, self).get_context_data(**kwargs)
         context.update({
-            'article_list': models.Article.objects.filter(is_public=True)
+            'article_list': models.Article.objects.filter(is_public=True),
+            'good_article_list': self.get_good_article_list(),
         })
         return context
-
 
 
 class ArticleDetail(DetailView):
     template_name = 'blog/detail.html'
     model = models.Article
-    context_object_name = 'article'
 
     def get_context_data(self, **kwargs):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
