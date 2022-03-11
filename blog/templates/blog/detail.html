@@ -12,9 +12,14 @@
     <li>
         {{ article.content }}
     </li>
+    <li>{{ good_cnt }}</li>
+    <li><a href="{% url 'do_good' article.pk %}">iine</a> </li>
+    <li><a href="{% url 'read_later' article.pk %}">read later</a> </li>
 
 {% for comment in comments %}
 <li>{{ comment.content }}</li>
 {% endfor %}
+
+<a href="{% url 'index' %}">戻る</a>
 </body>
 </html>
