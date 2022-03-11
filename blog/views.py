@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView, CreateView
 from . import models
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 
 
@@ -21,7 +21,7 @@ class ArticleDetail(DetailView):
         article = get_object_or_404(models.Article, id=self.kwargs['pk'], is_public=True)
         context.update({
             'comments': models.Comment.objects.filter(article=article),
-            'good_cnt': article.good_user.all().count()
+            'good_cnt': article.good_user.all().count(),
         })
         print(article.good_user.all())
 
@@ -46,3 +46,14 @@ class CreateCommentView(CreateView):
         form.save()
 
         return super().form_valid(form)
+
+
+def do_good(request, article_pk):
+    article = models.Article.objects.get(pk=article_pk)
+    user = request.user
+    if user in article.good_user.all():
+        article.good_user.remove(user)
+    else:
+        article.good_user.add(user)
+
+    return redirect('detail_article', article_pk)
