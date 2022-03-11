@@ -7,8 +7,14 @@ from django.urls import reverse
 class ArticleList(ListView):
     template_name = 'blog/index.html'
     model = models.Article
-    context_object_name = 'articles'
-    queryset = models.Article.objects.filter(is_public=True)
+
+    def get_context_data(self, **kwargs):
+        context = super(ArticleList, self).get_context_data(**kwargs)
+        context.update({
+            'article_list': models.Article.objects.filter(is_public=True)
+        })
+        return context
+
 
 
 class ArticleDetail(DetailView):
