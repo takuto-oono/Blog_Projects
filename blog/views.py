@@ -70,3 +70,12 @@ def do_good(request, article_pk):
         article.good_user.add(user)
 
     return redirect('detail_article', article_pk)
+
+
+def read_later(request, article_pk):
+    article = models.Article.objects.get(pk=article_pk)
+    user = request.user
+    if user in article.read_later_user.all():
+        article.read_later_user.remove(user)
+    else:
+        article.read_later_user.add(user)
