@@ -15,5 +15,8 @@
     <li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}</a></li>
 {% endfor %}
 <h1>後で読むリスト</h1>
+{% for article in read_later_list %}
+<li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}</a></li>
+{% endfor %}
 </body>
 </html>
