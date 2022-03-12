@@ -16,6 +16,7 @@
 <li><a href="{% url 'do_good' article.pk %}">iine</a></li>
 <li><a href="{% url 'read_later' article.pk %}">read later</a></li>
 <li><a href="{% url 'create_comment' article.pk %}">add comment</a></li>
+
 {% for comment in comments %}
     <li>{{ comment.content }}</li>
 {% endfor %}

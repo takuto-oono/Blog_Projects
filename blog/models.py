@@ -7,7 +7,7 @@ class Article(models.Model):
     title = models.CharField(
         max_length=50, verbose_name='記事のタイトル', unique=True)
     content = models.CharField(max_length=3000, verbose_name='記事内容')
-    picture = models.ImageField(null=True, blank=True, default='enemy2.png', upload_to='article_thumbnail')
+    picture = models.ImageField(null=True, blank=True, default='enemy2.png', upload_to='article_thumbnail', verbose_name='記事のサムネ')
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, verbose_name='編集者情報', related_name='create_user')
     PUBLIC_SETTINGS_CHOICES = (
@@ -20,6 +20,7 @@ class Article(models.Model):
     # article_goods = models.IntegerField(default=0, verbose_name='いいね')
     good_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='高評価ユーザー', related_name='good_user')
     read_later_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='後で読むユーザー', related_name='later_user')
+    browsing_user = models.ManyToManyField(get_user_model(), blank=True, related_name='browsing_user', verbose_name='閲覧したユーザー')
 
     def __str__(self):
         return self.title

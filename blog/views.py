@@ -36,14 +36,19 @@ class ArticleDetail(DetailView):
     template_name = 'blog/detail.html'
     model = models.Article
 
+    def write_browsing_history(self, reading_article):
+        user = self.request.user
+        if user not in reading_article.browsing_user.all():
+            reading_article.browsing_user.add(user)
+
     def get_context_data(self, **kwargs):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
         article = get_object_or_404(models.Article, id=self.kwargs['pk'], is_public=True)
+        self.write_browsing_history(article)
         context.update({
             'comments': models.Comment.objects.filter(article=article),
             'good_cnt': article.good_user.all().count(),
         })
-        print(article.good_user.all())
 
         return context
 
