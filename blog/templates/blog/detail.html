@@ -5,19 +5,19 @@
     <title>Title</title>
 </head>
 <body>
-    <li>
-        {{ article.title }}
-    </li>
+<li>
+    {{ article.title }}
+</li>
 
-    <li>
-        {{ article.content }}
-    </li>
-    <li>{{ good_cnt }}</li>
-    <li><a href="{% url 'do_good' article.pk %}">iine</a> </li>
-    <li><a href="{% url 'read_later' article.pk %}">read later</a> </li>
-
+<li>
+    {{ article.content }}
+</li>
+<li>{{ good_cnt }}</li>
+<li><a href="{% url 'do_good' article.pk %}">iine</a></li>
+<li><a href="{% url 'read_later' article.pk %}">read later</a></li>
+<li><a href="{% url 'create_comment' article.pk %}">add comment</a></li>
 {% for comment in comments %}
-<li>{{ comment.content }}</li>
+    <li>{{ comment.content }}</li>
 {% endfor %}
 
 <a href="{% url 'index' %}">戻る</a>
