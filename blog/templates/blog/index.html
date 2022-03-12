@@ -8,7 +8,8 @@
 <body>
 <h1>一覧表示</h1>
 {% for article in article_list %}
-    <li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}</a></li>
+    <li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}
+        <img src="{{ article.picture.url }}"> </a></li>
 {% endfor %}
 <h1>高評価リスト</h1>
 {% for article in good_article_list %}
