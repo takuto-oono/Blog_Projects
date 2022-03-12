@@ -7,6 +7,7 @@ class Article(models.Model):
     title = models.CharField(
         max_length=50, verbose_name='記事のタイトル', unique=True)
     content = models.CharField(max_length=3000, verbose_name='記事内容')
+    picture = models.ImageField(null=True, blank=True)
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, verbose_name='編集者情報', related_name='create_user')
     PUBLIC_SETTINGS_CHOICES = (
