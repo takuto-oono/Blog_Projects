@@ -42,6 +42,13 @@ class ArticleDetail(DetailView):
         if user not in reading_article.browsing_user.all():
             reading_article.browsing_user.add(user)
 
+    def get_recommended_article_list(self):
+        recommended_article_list = []
+        for article in models.Article.objects.filter(is_public=True).order_by('-good_count', '-public_date'):
+            if self.request.user not in article.browsing_user.all():
+                recommended_article_list.append(article)
+        return recommended_article_list
+
     def get_context_data(self, **kwargs):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
         article = get_object_or_404(models.Article, id=self.kwargs['pk'], is_public=True)
@@ -49,6 +56,7 @@ class ArticleDetail(DetailView):
         context.update({
             'comments': models.Comment.objects.filter(article=article),
             'good_cnt': article.good_user.all().count(),
+            'recommend_article_list': self.get_recommended_article_list(),
         })
 
         return context
