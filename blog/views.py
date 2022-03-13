@@ -10,22 +10,26 @@ class ArticleList(ListView):
 
     def get_good_article_list(self):
         good_article_list = []
-        for article in models.Article.objects.filter(is_public=True):
+        for article in models.Article.objects.filter(is_public=True).order_by('public_date').reverse():
             if self.request.user in article.good_user.all():
                 good_article_list.append(article)
+
         return good_article_list
 
     def get_later_article_list(self):
         read_later_list = []
-        for article in models.Article.objects.filter(is_public=True):
+        for article in models.Article.objects.filter(is_public=True).order_by('public_date').reverse():
             if self.request.user in article.read_later_user.all():
                 read_later_list.append(article)
         return read_later_list
 
+    def sort_article_list(self, article_list):
+        article_list.order_by()
+
     def get_context_data(self, **kwargs):
         context = super(ArticleList, self).get_context_data(**kwargs)
         context.update({
-            'article_list': models.Article.objects.filter(is_public=True),
+            'article_list': models.Article.objects.filter(is_public=True).order_by('public_date').reverse(),
             'good_article_list': self.get_good_article_list(),
             'read_later_list': self.get_later_article_list()
         })
