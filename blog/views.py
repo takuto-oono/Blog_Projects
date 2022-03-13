@@ -23,9 +23,6 @@ class ArticleList(ListView):
                 read_later_list.append(article)
         return read_later_list
 
-    def sort_article_list(self, article_list):
-        article_list.order_by()
-
     def get_context_data(self, **kwargs):
         context = super(ArticleList, self).get_context_data(**kwargs)
         context.update({
