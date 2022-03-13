@@ -79,9 +79,12 @@ def do_good(request, article_pk):
     user = request.user
     if user in article.good_user.all():
         article.good_user.remove(user)
+        article.good_count -= 1
     else:
         article.good_user.add(user)
+        article.good_count += 1
 
+    article.save()
     return redirect('detail_article', article_pk)
 
 
