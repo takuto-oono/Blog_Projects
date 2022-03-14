@@ -44,8 +44,15 @@ class ArticleDetail(DetailView):
 
     def get_recommended_article_list(self):
         recommended_article_list = []
-        for article in models.Article.objects.filter(is_public=True).order_by('-good_count', '-public_date'):
-            if self.request.user not in article.browsing_user.all():
+        articles = models.Article.objects.filter(is_public=True).order_by('-good_count', '-public_date')
+        for article in articles:
+            if self.request.user in article.read_later_user.all():
+                recommended_article_list.append(article)
+        for article in articles:
+            if self.request.user not in article.browsing_user.all() and article not in recommended_article_list:
+                recommended_article_list.append(article)
+        for article in articles:
+            if self.request.user in article.browsing_user.all() and article not in recommended_article_list:
                 recommended_article_list.append(article)
         return recommended_article_list
 
@@ -104,4 +111,4 @@ def read_later(request, article_pk):
     else:
         article.read_later_user.add(user)
 
-    return redirect('detail_article', article_pk)
+    return redirect('index')
