@@ -55,7 +55,7 @@ class ArticleDetail(DetailView):
         self.write_browsing_history(article)
         context.update({
             'comments': models.Comment.objects.filter(article=article),
-            'good_cnt': article.good_user.all().count(),
+            'good_cnt': article.good_count,
             'recommend_article_list': self.get_recommended_article_list(),
         })
 
