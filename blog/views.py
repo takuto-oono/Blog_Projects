@@ -10,14 +10,15 @@ class ArticleList(ListView):
 
     def get_good_article_list(self):
         good_article_list = []
-        for article in models.Article.objects.filter(is_public=True):
+        for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
             if self.request.user in article.good_user.all():
                 good_article_list.append(article)
+
         return good_article_list
 
     def get_later_article_list(self):
         read_later_list = []
-        for article in models.Article.objects.filter(is_public=True):
+        for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
             if self.request.user in article.read_later_user.all():
                 read_later_list.append(article)
         return read_later_list
@@ -25,7 +26,7 @@ class ArticleList(ListView):
     def get_context_data(self, **kwargs):
         context = super(ArticleList, self).get_context_data(**kwargs)
         context.update({
-            'article_list': models.Article.objects.filter(is_public=True),
+            'article_list': models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'),
             'good_article_list': self.get_good_article_list(),
             'read_later_list': self.get_later_article_list()
         })
@@ -41,13 +42,21 @@ class ArticleDetail(DetailView):
         if user not in reading_article.browsing_user.all():
             reading_article.browsing_user.add(user)
 
+    def get_recommended_article_list(self):
+        recommended_article_list = []
+        for article in models.Article.objects.filter(is_public=True).order_by('-good_count', '-public_date'):
+            if self.request.user not in article.browsing_user.all():
+                recommended_article_list.append(article)
+        return recommended_article_list
+
     def get_context_data(self, **kwargs):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
         article = get_object_or_404(models.Article, id=self.kwargs['pk'], is_public=True)
         self.write_browsing_history(article)
         context.update({
             'comments': models.Comment.objects.filter(article=article),
-            'good_cnt': article.good_user.all().count(),
+            'good_cnt': article.good_count,
+            'recommend_article_list': self.get_recommended_article_list(),
         })
 
         return context
@@ -78,9 +87,12 @@ def do_good(request, article_pk):
     user = request.user
     if user in article.good_user.all():
         article.good_user.remove(user)
+        article.good_count -= 1
     else:
         article.good_user.add(user)
+        article.good_count += 1
 
+    article.save()
     return redirect('detail_article', article_pk)
 
 

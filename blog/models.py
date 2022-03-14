@@ -19,6 +19,7 @@ class Article(models.Model):
     public_date = models.DateField(verbose_name='公開日')
     # article_goods = models.IntegerField(default=0, verbose_name='いいね')
     good_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='高評価ユーザー', related_name='good_user')
+    good_count = models.IntegerField(default=0, verbose_name='いいねの数')
     read_later_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='後で読むユーザー', related_name='later_user')
     browsing_user = models.ManyToManyField(get_user_model(), blank=True, related_name='browsing_user', verbose_name='閲覧したユーザー')
 

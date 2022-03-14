@@ -22,5 +22,9 @@
 {% endfor %}
 
 <a href="{% url 'index' %}">戻る</a>
+
+{% for article in recommend_article_list %}
+<li>{{ article.title }}</li>
+{% endfor %}
 </body>
 </html>
