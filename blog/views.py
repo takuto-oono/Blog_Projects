@@ -4,6 +4,18 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 
 
+class CategoryList(ListView):
+    template_name = 'blog/category.html'
+    model = models.Category
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryList, self).get_context_data(**kwargs)
+        context.update({
+            'article_list': models.Article.objects.filter(is_public=True,
+                                                          category=models.Category(pk=self.kwargs['category_pk'])),
+        })
+
+
 class ArticleList(ListView):
     template_name = 'blog/index.html'
     model = models.Article
@@ -28,7 +40,7 @@ class ArticleList(ListView):
         context.update({
             'article_list': models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'),
             'good_article_list': self.get_good_article_list(),
-            'read_later_list': self.get_later_article_list()
+            'read_later_list': self.get_later_article_list(),
         })
         return context
 

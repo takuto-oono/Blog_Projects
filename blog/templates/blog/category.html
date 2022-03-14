@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>category</title>
+</head>
+<body>
+    {{ category_title }}
+
+    {% for article in article_list %}
+        <li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}
+            <img src="{{ article.picture.url }}"> </a>
+            <a href="{% url 'read_later' article.pk %}">後で読む</a>
+        </li>
+    {% endfor %}
+
+
+</body>
+</html>
