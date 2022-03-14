@@ -104,4 +104,4 @@ def read_later(request, article_pk):
     else:
         article.read_later_user.add(user)
 
-    return redirect('detail_article', article_pk)
+    return redirect('index')
