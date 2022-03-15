@@ -1,5 +1,14 @@
 from django.contrib import admin
-from .models import Article, Comment
+from .models import Category, Article, Comment
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    fields = [
+        'title', 'detail', 'is_public'
+    ]
+
+
+admin.site.register(Category, CategoryAdmin)
 
 
 class ArticleAdmin(admin.ModelAdmin):

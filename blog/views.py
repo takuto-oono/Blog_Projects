@@ -38,6 +38,7 @@ class ArticleList(ListView):
     def get_context_data(self, **kwargs):
         context = super(ArticleList, self).get_context_data(**kwargs)
         context.update({
+            'category_list': models.Category.objects.filter(is_public=True),
             'article_list': models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'),
             'good_article_list': self.get_good_article_list(),
             'read_later_list': self.get_later_article_list(),
