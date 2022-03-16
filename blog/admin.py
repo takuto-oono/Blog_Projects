@@ -1,10 +1,19 @@
 from django.contrib import admin
-from .models import Article, Comment
+from .models import Category, Article, Comment
+
+
+class CategoryAdmin(admin.ModelAdmin):
+    fields = [
+        'title', 'detail', 'is_public'
+    ]
+
+
+admin.site.register(Category, CategoryAdmin)
 
 
 class ArticleAdmin(admin.ModelAdmin):
     fields = [
-        'title', 'content', 'picture', 'user',
+        'title', 'content', 'picture', 'category', 'user',
         'is_public', 'public_date', 'good_user', 'good_count', 'read_later_user', 'browsing_user']
 
 

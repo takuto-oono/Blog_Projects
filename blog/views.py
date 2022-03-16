@@ -1,7 +1,19 @@
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from . import models
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
+
+
+class CategoryList(ListView):
+    template_name = 'blog/category.html'
+    model = models.Category
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryList, self).get_context_data(**kwargs)
+        context.update({
+            'article_list': models.Article.objects.filter(is_public=True,
+                                                          category=models.Category(pk=self.kwargs['category_pk'])),
+        })
 
 
 class ArticleList(ListView):
@@ -26,12 +38,25 @@ class ArticleList(ListView):
     def get_context_data(self, **kwargs):
         context = super(ArticleList, self).get_context_data(**kwargs)
         context.update({
+            'category_list': models.Category.objects.filter(is_public=True),
             'article_list': models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'),
             'good_article_list': self.get_good_article_list(),
-            'read_later_list': self.get_later_article_list()
+            'read_later_list': self.get_later_article_list(),
         })
         return context
 
+
+class CategoryDetail(TemplateView):
+    template_name = 'blog/category.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryDetail, self).get_context_data(**kwargs)
+        category = models.Category.objects.get(pk=self.kwargs['category_pk'], is_public=True)
+        context.update({
+            'article_list': models.Article.objects.filter(is_public=True, category=category)
+        })
+        print(context)
+        return context
 
 class ArticleDetail(DetailView):
     template_name = 'blog/detail.html'
