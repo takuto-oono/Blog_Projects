@@ -1,5 +1,6 @@
 import os
 import random
+import time
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Blog_Projects.settings')
 from django import setup
@@ -40,10 +41,10 @@ def create_articles_detail():
         article = {
             'title': 'article-' + str(i),
             'content': 'content' + str(i),
-            'user': User.objects.get(pk=random.randint(1, 10)),
+            'user': User.objects.get(username='username' + str(random.randint(0, 9))),
             'is_public': True,
             'public_date': date.fromisoformat('2022-01-01'),
-            'category': Category.objects.get(pk=random.randint(1, 10)),
+            'category': Category.objects.get(title='category' + str(random.randint(0, 9))),
             'good_count': 0,
         }
         Article_list.append(article)
@@ -75,13 +76,16 @@ def create_articles():
         article.is_public = article_detail['is_public']
         article.public_date = article_detail['public_date']
         article.good_count = article_detail['good_count']
+        article.category = article_detail['category']
         article.save()
 
 
 if __name__ == '__main__':
-    # create_users_detail()
-    # create_users()
-    # create_categories_detail()
-    # create_categories()
+    create_users_detail()
+    create_users()
+    time.sleep(5)
+    create_categories_detail()
+    create_categories()
+    time.sleep(5)
     create_articles_detail()
     create_articles()

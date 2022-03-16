@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from . import models
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -45,6 +45,18 @@ class ArticleList(ListView):
         })
         return context
 
+
+class CategoryDetail(TemplateView):
+    template_name = 'blog/category.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CategoryDetail, self).get_context_data(**kwargs)
+        category = models.Category.objects.get(pk=self.kwargs['category_pk'], is_public=True)
+        context.update({
+            'article_list': models.Article.objects.filter(is_public=True, category=category)
+        })
+        print(context)
+        return context
 
 class ArticleDetail(DetailView):
     template_name = 'blog/detail.html'

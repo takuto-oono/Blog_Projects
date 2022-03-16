@@ -9,7 +9,7 @@
 
     {% for article in article_list %}
         <li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}
-            <img src="{{ article.picture.url }}"> </a>
+            <img src="{{ article.picture.url }}" width="400px" height="400px"> </a>
             <a href="{% url 'read_later' article.pk %}">後で読む</a>
         </li>
     {% endfor %}
