@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from . import models
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
+import datetime
 
 
 class CategoryList(ListView):
@@ -96,6 +97,21 @@ class ArticleDetail(DetailView):
     def get_queryset(self):
         return models.Article.objects.filter(is_public=True)
 
+
+class CreateArticle(CreateView):
+    template_name = 'admin/create_article.html'
+    model = models.Article
+    fields = ['title', 'content', 'picture', 'is_public', 'category']
+
+    def get_success_url(self):
+        return reverse('index')
+
+    def form_valid(self, form):
+        form = form.save(commit=False)
+        form.user = self.request.user
+        form.public_date = datetime.date.today()
+        form.save()
+        return super().form_valid(form)
 
 class CreateCommentView(CreateView):
     template_name = 'blog/create_comment.html'
