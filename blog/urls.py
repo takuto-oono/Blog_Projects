@@ -11,4 +11,5 @@ urlpatterns = [
                   path('do_good/<int:article_pk>', views.do_good, name='do_good'),
                   path('read_later/<int:article_pk>', views.read_later, name='read_later'),
                   path('category/<int:category_pk>', views.CategoryDetail.as_view(), name='category'),
+                  path('admin_admin/create_article', views.CreateArticle.as_view(), name='create_article'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
