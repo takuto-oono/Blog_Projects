@@ -59,6 +59,7 @@ class CategoryDetail(TemplateView):
         print(context)
         return context
 
+
 class ArticleDetail(DetailView):
     template_name = 'blog/detail.html'
     model = models.Article
@@ -96,6 +97,18 @@ class ArticleDetail(DetailView):
 
     def get_queryset(self):
         return models.Article.objects.filter(is_public=True)
+
+
+class AdminArticleList(ListView):
+    template_name = 'admin/admin_article_list.html'
+    model = models.Article
+
+    def get_context_data(self, **kwargs):
+        context = super(AdminArticleList, self).get_context_data()
+        context.update({
+            'article_list': models.Article.objects.all()
+        })
+        return context
 
 
 class CreateArticle(CreateView):
