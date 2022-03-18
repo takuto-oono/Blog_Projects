@@ -13,4 +13,5 @@ urlpatterns = [
                   path('category/<int:category_pk>', views.CategoryDetail.as_view(), name='category'),
                   path('admin_admin', views.AdminArticleList.as_view(), name='admin_article_list'),
                   path('admin_admin/create_article', views.CreateArticle.as_view(), name='create_article'),
+                  path('admin_admin/edit_article/<int:pk>', views.EditArticle.as_view(), name='edit_article'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
