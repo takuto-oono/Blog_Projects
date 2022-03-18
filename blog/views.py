@@ -59,6 +59,7 @@ class CategoryDetail(TemplateView):
         print(context)
         return context
 
+
 class ArticleDetail(DetailView):
     template_name = 'blog/detail.html'
     model = models.Article
@@ -98,6 +99,18 @@ class ArticleDetail(DetailView):
         return models.Article.objects.filter(is_public=True)
 
 
+class AdminArticleList(ListView):
+    template_name = 'admin/admin_article_list.html'
+    model = models.Article
+
+    def get_context_data(self, **kwargs):
+        context = super(AdminArticleList, self).get_context_data()
+        context.update({
+            'article_list': models.Article.objects.all()
+        })
+        return context
+
+
 class CreateArticle(CreateView):
     template_name = 'admin/create_article.html'
     model = models.Article
@@ -112,6 +125,7 @@ class CreateArticle(CreateView):
         form.public_date = datetime.date.today()
         form.save()
         return super().form_valid(form)
+
 
 class CreateCommentView(CreateView):
     template_name = 'blog/create_comment.html'
