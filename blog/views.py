@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 from . import models
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -122,6 +122,26 @@ class CreateArticle(CreateView):
     def form_valid(self, form):
         form = form.save(commit=False)
         form.user = self.request.user
+        form.public_date = datetime.date.today()
+        form.save()
+        return super().form_valid(form)
+
+
+class EditArtile(UpdateView):
+    template_name = 'admin/edit_article.html'
+    model = models.Article
+    fields = [
+        'title',
+        'content',
+        'picture',
+        'is_public',
+    ]
+
+    def get_success_url(self):
+        return reverse('admin_article_list')
+
+    def form_valid(self, form):
+        form = form.save(commit=False)
         form.public_date = datetime.date.today()
         form.save()
         return super().form_valid(form)
