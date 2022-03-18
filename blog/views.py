@@ -127,7 +127,7 @@ class CreateArticle(CreateView):
         return super().form_valid(form)
 
 
-class EditArtile(UpdateView):
+class EditArticle(UpdateView):
     template_name = 'admin/edit_article.html'
     model = models.Article
     fields = [
