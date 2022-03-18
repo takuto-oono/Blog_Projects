@@ -113,6 +113,7 @@ class CreateArticle(CreateView):
         form.save()
         return super().form_valid(form)
 
+
 class CreateCommentView(CreateView):
     template_name = 'blog/create_comment.html'
     model = models.Comment
