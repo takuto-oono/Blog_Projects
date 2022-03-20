@@ -43,7 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'username'
 
     class Meta:
-        verbose_name_plural = ('アカウント')
+        verbose_name_plural = 'アカウント'
 
     def clean(self):
         super().clean()
