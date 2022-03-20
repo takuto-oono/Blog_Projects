@@ -150,19 +150,19 @@ class EditArticle(UpdateView):
         return super().form_valid(form)
 
 
-class DeleteArticle(DeleteView):
-    model = models.Article
-    success_url = '/admin_admin/'
-    # def get_success_url(self):
+# class DeleteArticle(DeleteView):
+#     model = models.Article
+#     success_url = '/admin_admin/'
+#     def get_success_url(self):
     #     return reverse('admin_article_list')
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if self.object.user == self.request.user:
-            self.object.delete()
-            return http.HttpResponseRedirect(self.success_url)
-        else:
-            return http.HttpResponseForbidden('作成したユーザでなければ削除できません')
+    # def delete(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     if self.object.user == self.request.user:
+    #         self.object.delete()
+    #         return http.HttpResponseRedirect(self.success_url)
+    #     else:
+
 
 
 class CreateCommentView(CreateView):
