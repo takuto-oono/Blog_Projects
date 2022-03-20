@@ -9,6 +9,7 @@
        {% for article in article_list %}
        <li>{{ article.title }}</li>
            <li><a href="{% url 'edit_article' article.pk %}">編集</a> </li>
+{#           <li><a href="{% url 'delete_article' article.pk %}">削除</a></li>#}
        {% endfor %}
    </ul>
 </body>
