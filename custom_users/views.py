@@ -21,3 +21,7 @@ class Signup(CreateView):
 class Login(LoginView):
     template_name = 'custom_user/login.html'
     form_class = LoginForm
+
+
+class Logout(LogoutView):
+    pass
