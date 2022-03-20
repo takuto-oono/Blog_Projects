@@ -1,8 +1,11 @@
-from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
+import http.client
+
+from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView, DeleteView
 from . import models
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 import datetime
+from django import http
 
 
 class CategoryList(ListView):
@@ -145,6 +148,21 @@ class EditArticle(UpdateView):
         form.public_date = datetime.date.today()
         form.save()
         return super().form_valid(form)
+
+
+class DeleteArticle(DeleteView):
+    model = models.Article
+    success_url = '/admin_admin/'
+    # def get_success_url(self):
+    #     return reverse('admin_article_list')
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.user == self.request.user:
+            self.object.delete()
+            return http.HttpResponseRedirect(self.success_url)
+        else:
+            return http.HttpResponseForbidden('作成したユーザでなければ削除できません')
 
 
 class CreateCommentView(CreateView):
