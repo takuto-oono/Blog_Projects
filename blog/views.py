@@ -6,6 +6,9 @@ from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 import datetime
 from django import http
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 
 class CategoryList(ListView):
@@ -67,11 +70,14 @@ class ArticleDetail(DetailView):
     template_name = 'blog/detail.html'
     model = models.Article
 
+    @method_decorator(login_required)
     def write_browsing_history(self, reading_article):
-        user = self.request.user
-        if user not in reading_article.browsing_user.all():
-            reading_article.browsing_user.add(user)
+        if self.request.user:
+            user = self.request.user
+            if user not in reading_article.browsing_user.all():
+                reading_article.browsing_user.add(user)
 
+    @method_decorator(login_required)
     def get_recommended_article_list(self):
         recommended_article_list = []
         articles = models.Article.objects.filter(is_public=True).order_by('-good_count', '-public_date')
@@ -89,12 +95,19 @@ class ArticleDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
         article = get_object_or_404(models.Article, id=self.kwargs['pk'], is_public=True)
-        self.write_browsing_history(article)
-        context.update({
-            'comments': models.Comment.objects.filter(article=article),
-            'good_cnt': article.good_count,
-            'recommend_article_list': self.get_recommended_article_list(),
-        })
+        if self.request.user.is_authenticated:
+            self.write_browsing_history(article)
+            context.update({
+                'comments': models.Comment.objects.filter(article=article),
+                'good_cnt': article.good_count,
+                'recommend_article_list': self.get_recommended_article_list(),
+            })
+        else:
+            context.update({
+                'comments': models.Comment.objects.filter(article=article),
+                'good_cnt': article.good_count,
+
+            })
 
         return context
 
@@ -102,7 +115,7 @@ class ArticleDetail(DetailView):
         return models.Article.objects.filter(is_public=True)
 
 
-class AdminArticleList(ListView):
+class AdminArticleList(ListView, LoginRequiredMixin):
     template_name = 'admin/admin_article_list.html'
     model = models.Article
 
@@ -114,7 +127,7 @@ class AdminArticleList(ListView):
         return context
 
 
-class CreateArticle(CreateView):
+class CreateArticle(CreateView, LoginRequiredMixin):
     template_name = 'admin/create_article.html'
     model = models.Article
     fields = ['title', 'content', 'picture', 'is_public', 'category']
@@ -130,7 +143,7 @@ class CreateArticle(CreateView):
         return super().form_valid(form)
 
 
-class EditArticle(UpdateView):
+class EditArticle(UpdateView, LoginRequiredMixin):
     template_name = 'admin/edit_article.html'
     model = models.Article
     fields = [
@@ -154,18 +167,17 @@ class EditArticle(UpdateView):
 #     model = models.Article
 #     success_url = '/admin_admin/'
 #     def get_success_url(self):
-    #     return reverse('admin_article_list')
+#     return reverse('admin_article_list')
 
-    # def delete(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     if self.object.user == self.request.user:
-    #         self.object.delete()
-    #         return http.HttpResponseRedirect(self.success_url)
-    #     else:
+# def delete(self, request, *args, **kwargs):
+#     self.object = self.get_object()
+#     if self.object.user == self.request.user:
+#         self.object.delete()
+#         return http.HttpResponseRedirect(self.success_url)
+#     else:
 
 
-
-class CreateCommentView(CreateView):
+class CreateCommentView(CreateView, LoginRequiredMixin):
     template_name = 'blog/create_comment.html'
     model = models.Comment
     fields = ['content']
@@ -182,6 +194,7 @@ class CreateCommentView(CreateView):
         return super().form_valid(form)
 
 
+@login_required
 def do_good(request, article_pk):
     article = models.Article.objects.get(pk=article_pk)
     user = request.user
@@ -196,6 +209,7 @@ def do_good(request, article_pk):
     return redirect('detail_article', article_pk)
 
 
+@login_required
 def read_later(request, article_pk):
     article = models.Article.objects.get(pk=article_pk)
     user = request.user
