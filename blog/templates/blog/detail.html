@@ -1,22 +1,53 @@
-{% extends './base.html' %}
-{% block content %}
+{% extends './base.html' %} {% block content %}
 
-    <div id="detail">
-        <ul>
-            <li>
-                <a href="{% url 'do_good' article.pk %}">iine</a>
-            </li>
-            <li>
-                <a href="{% url 'read_later' article.pk %}">後で読む</a>
-            </li>
-        </ul>
-        <div class="article">
-            <p class="title">{{ article.title }}</p>
-            <p class="content">{{ article.content }}</p>
-        </div>
-        <div class="comment">
-            <a href="{% url 'create_comment' article.pk %}">コメントをする</a>
-        </div>
-    </div>
+<div id="detail">
+	<div id="category-list">
+		<p>カテゴリー</p>
+		<ul>
+			{% for category in category_list %}
+			<li>
+				<a href="{% url 'category' category.pk %}">{{ category.title }}</a>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+	<div id="article-detail">
+		<div id="article-header">
+			<img src="{{ article.picture.url }}" />
+            <p id="article-title">{{ article.title }}</p>
+			<ul>
+				<li>
+					<a href="{% url 'do_good' article.pk %}">いいね</a>
+				</li>
+				<li>
+					<a href="{% url 'read_later' article.pk %}">後で読む</a>
+				</li>
+				<li>
+					<a href="{% url 'create_comment' article.pk %}">コメントを書く</a>
+				</li>
+			</ul>
+		</div>
+		<div id="content-article">
+			<p>{{ article.content }}</p>
+		</div>
+		<div id="comment">
+            <p>コメント</p>
+			{% for comment in comments %}
+			<li>{{comment.content}}</li>
+			{% endfor %}
+		</div>
+	</div>
+	<div id="recommend_article_list">
+		{% for article in recommend_article_list %}
+		<li>
+			<img src="{{ article.picture.url }}" />
+			<a href="{% url 'detail_article' article.pk %}">
+				<p>{{ article.title }}</p>
+			</a>
+			<a href="{% url 'read_later' article.pk %}">後で読む</a>
+		</li>
+		{% endfor %}
+	</div>
+</div>
 
 {% endblock %}
