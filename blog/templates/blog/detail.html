@@ -13,13 +13,9 @@
 	</div>
 	<div id="article-detail">
 		<div id="article-header">
-			<div id="picture">
-				<img src="{{ article.picture.url }}" />
-			</div>
+			<img src="{{ article.picture.url }}" />
+            <p id="article-title">{{ article.title }}</p>
 			<ul>
-				<li>
-					<p class="article-title">{{ article.title }}</p>
-				</li>
 				<li>
 					<a href="{% url 'do_good' article.pk %}">いいね</a>
 				</li>
@@ -35,6 +31,7 @@
 			<p>{{ article.content }}</p>
 		</div>
 		<div id="comment">
+            <p>コメント</p>
 			{% for comment in comments %}
 			<li>{{comment.content}}</li>
 			{% endfor %}
