@@ -5,26 +5,30 @@
     <meta charset="UTF-8">
     <title>Blog</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
 
 </head>
 <body>
 <header>
-    <ul class="flex justify-between">
-        <li class="px-20">
+    <ul>
+        <li>
             <h1>Blog</h1>
         </li>
-        {% if request.user.is_authenticated %}
-            <li class="px-20">
-                <a href="{% url 'logout' %}">ログアウト</a>
-            </li>
-        {% else %}
-            <li class="px-20">
-                <a href="{% url 'register' %}">サインイン</a>
-            </li>
-            <li class="px-20">
-                <a href="{% url 'login' %}">ログイン</a>
-            </li>
-        {% endif %}
+        <ul>
+            {% if request.user.is_authenticated %}
+                <li>
+                    <a href="{% url 'logout' %}">ログアウト</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'register' %}">サインイン</a>
+                </li>
+                <li>
+                    <a href="{% url 'login' %}">ログイン</a>
+                </li>
+            {% endif %}
+        </ul>
     </ul>
 </header>
 {% block content %}

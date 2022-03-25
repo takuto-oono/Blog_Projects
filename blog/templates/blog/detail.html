@@ -1,31 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-<li>
-    {{ article.title }}
-</li>
+{% extends './base.html' %}
+{% block content %}
 
-<li>
-    {{ article.content }}
-</li>
-<li>{{ good_cnt }}</li>
-<li><a href="{% url 'do_good' article.pk %}">iine</a></li>
-<li><a href="{% url 'read_later' article.pk %}">read later</a></li>
-<li><a href="{% url 'create_comment' article.pk %}">add comment</a></li>
+    <div id="detail">
+        <ul>
+            <li>
+                <a href="{% url 'do_good' article.pk %}">iine</a>
+            </li>
+            <li>
+                <a href="{% url 'read_later' article.pk %}">後で読む</a>
+            </li>
+        </ul>
+        <div class="article">
+            <p class="title">{{ article.title }}</p>
+            <p class="content">{{ article.content }}</p>
+        </div>
+        <div class="comment">
+            <a href="{% url 'create_comment' article.pk %}">コメントをする</a>
+        </div>
+    </div>
 
-{% for comment in comments %}
-    <li>{{ comment.content }}</li>
-{% endfor %}
-
-<a href="{% url 'index' %}">戻る</a>
-
-{% for article in recommend_article_list %}
-<li>{{ article.title }}</li>
-{% endfor %}
-</body>
-</html>
+{% endblock %}

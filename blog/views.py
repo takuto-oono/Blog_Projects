@@ -70,14 +70,14 @@ class ArticleDetail(DetailView):
     template_name = 'blog/detail.html'
     model = models.Article
 
-    @method_decorator(login_required)
+    # @method_decorator(login_required)
     def write_browsing_history(self, reading_article):
         if self.request.user:
             user = self.request.user
             if user not in reading_article.browsing_user.all():
                 reading_article.browsing_user.add(user)
 
-    @method_decorator(login_required)
+    # @method_decorator(login_required)
     def get_recommended_article_list(self):
         recommended_article_list = []
         articles = models.Article.objects.filter(is_public=True).order_by('-good_count', '-public_date')

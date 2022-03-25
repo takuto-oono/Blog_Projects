@@ -1,0 +1,34 @@
+{% extends './base.html' %}
+{% block content %}
+
+    <div id="index">
+        <nav>
+            <ul>
+                {% for category in category_list %}
+                    <li>
+                        <a href="{% url 'category' category.pk %}">{{ category.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+
+        <h1>一覧表示</h1>
+        <ul>
+            {% for article in article_list %}
+                <li class=" w-1/5"><a class="" href="{% url 'detail_article' article.pk %}">{{ article.title }}
+                    <img src="{{ article.picture.url }}" width="200px" height="200px"> </a>
+                    <a href="{% url 'read_later' article.pk %}">後で読む</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <h1>高評価リスト</h1>
+        {% for article in good_article_list %}
+            <li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}</a></li>
+        {% endfor %}
+        <h1>後で読むリスト</h1>
+        {% for article in read_later_list %}
+            <li><a href="{% url 'detail_article' article.pk %}">{{ article.title }}</a></li>
+        {% endfor %}
+    </div>
+
+{% endblock %}
