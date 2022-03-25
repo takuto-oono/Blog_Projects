@@ -1,0 +1,32 @@
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+
+    header {
+        width: 100%;
+        margin: 0 auto;
+
+        ul {
+            display: flex;
+            justify-content: space-between;
+
+            li {
+                padding: 5px 20px;
+
+            }
+
+            ul {
+                justify-content: center;
+                li {
+                    margin-left: 10px;
+                    margin-right: 10px;
+                }
+            }
+        }
+    }
+}

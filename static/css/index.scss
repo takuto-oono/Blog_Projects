@@ -1,0 +1,62 @@
+#index {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+
+    #category-list {
+        width: 19%;
+        text-align: center;
+        border: 3px solid #000000;
+        padding: 0.5em 1em;
+    }
+
+    #article-list {
+        border: 3px solid #000000;
+        width: 69%;
+        p {
+
+        }
+
+        ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+
+            li {
+                margin: 0;
+                height: 300px;
+                width: 200px;
+                margin: 20px;
+
+                img{
+                    height: 200px;
+                    width: 200px;
+                }
+
+
+            }
+        }
+    }
+
+    #read-later-list {
+        border: 3px solid #000000;
+        ul {
+            width: 9%;
+
+            li {
+                height: 200px;
+                width: 150px;
+
+                img {
+                    height: 150px;
+                    width: 150px;
+                }
+
+                .link {
+
+                }
+            }
+        }
+
+    }
+}
