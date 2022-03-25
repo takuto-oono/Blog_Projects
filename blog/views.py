@@ -101,6 +101,7 @@ class ArticleDetail(DetailView):
                 'comments': models.Comment.objects.filter(article=article),
                 'good_cnt': article.good_count,
                 'recommend_article_list': self.get_recommended_article_list(),
+                'category_list': models.Category.objects.filter(is_public=True)
             })
         else:
             context.update({
