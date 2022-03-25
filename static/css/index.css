@@ -27,6 +27,7 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
+  border: 3px solid #000000;
 }
 
 #index #article-list ul li {
