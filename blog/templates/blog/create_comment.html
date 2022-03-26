@@ -1,15 +1,19 @@
 {% extends "./base.html" %} {% block content %}
 <div id="create-comment">
-	<form method="post">
-		{% csrf_token %}
-		<div class="form-group">
-			<label> {{ form.content.label }}: </label>
-			{{ form.content }}
-		</div>
-		<input type="submit" value="save" />
-	</form>
+	<div class="form">
+		<form id="form" method="post">
+			{% csrf_token %}
+			<div class="form-group">
+				<p>コメント内容</p>
+				{{ form.content }}
+			</div>
+			<input type="submit" value="投稿" />
+		</form>
+	</div>
+
 	<div id="article-content">
-		<p>{{ article_content }}</p>
+		<p>記事本文</p>
+		<p class="content">{{ article_content }}</p>
 	</div>
 </div>
 {% endblock %}
