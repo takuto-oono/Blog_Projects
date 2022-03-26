@@ -1,0 +1,42 @@
+#create-comment {
+	display: flex;
+
+	.form {
+		width: 50%;
+
+		#form {
+			text-align: center;
+
+			p {
+				margin-bottom: 10px;
+			}
+
+			input {
+				width: 80%;
+				border: 2px solid black;
+			}
+			.form-group {
+				input {
+					width: 80%;
+					height: 600px;
+                    margin-bottom: 10px;
+				}
+			}
+		}
+	}
+
+	#article-content {
+		width: 50%;
+
+		p {
+			margin: 0 auto;
+			width: 80%;
+            margin-bottom: 10px;
+		}
+
+		.content {
+			padding: 20px;
+			border: 2px solid black;
+		}
+	}
+}

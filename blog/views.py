@@ -1,6 +1,7 @@
 import http.client
 
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView, DeleteView
+from . import forms
 from . import models
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -182,6 +183,11 @@ class CreateCommentView(CreateView, LoginRequiredMixin):
     template_name = 'blog/create_comment.html'
     model = models.Comment
     fields = ['content']
+    
+    def get_context_data(self, **kwargs):
+        context = super(CreateCommentView, self).get_context_data(**kwargs)
+        context['article_content'] = models.Article.objects.get(pk=self.kwargs['article_pk'])
+        return context
 
     def get_success_url(self, **kwargs):
         return reverse('detail_article', kwargs={'pk': self.kwargs['article_pk']})
