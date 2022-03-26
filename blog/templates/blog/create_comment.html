@@ -1,4 +1,15 @@
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="save">
-</form>
+{% extends "./base.html" %} {% block content %}
+<div id="create-comment">
+	<form method="post">
+		{% csrf_token %}
+		<div class="form-group">
+			<label> {{ form.content.label }}: </label>
+			{{ form.content }}
+		</div>
+		<input type="submit" value="save" />
+	</form>
+	<div id="article-content">
+		<p>{{ article_content }}</p>
+	</div>
+</div>
+{% endblock %}
