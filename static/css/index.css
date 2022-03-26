@@ -42,6 +42,12 @@
   width: 200px;
 }
 
+#index #article-list .pagination {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
 #index #read-later-list {
   border: 3px solid #000000;
 }
