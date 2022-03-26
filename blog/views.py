@@ -27,7 +27,13 @@ class CategoryList(ListView):
 class ArticleList(ListView):
     template_name = 'blog/index.html'
     model = models.Article
-
+    paginate_by = 10
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset.filter(is_public=True).order_by('-public_date', '-good_count')
+        return queryset
+    
     def get_good_article_list(self):
         good_article_list = []
         for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
