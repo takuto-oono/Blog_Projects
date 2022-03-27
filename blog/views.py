@@ -161,6 +161,21 @@ class CreateCommentView(CreateView, LoginRequiredMixin):
         form.save()
 
         return super().form_valid(form)
+    
+    
+class EditComment(UpdateView, LoginRequiredMixin):
+    template_name = 'blog/edit_comment.html'
+    model = models.Comment
+    field = ['content']
+    
+    def get_context_data(self, **kwargs):
+        context = super(EditComment, self).get_context_data(**kwargs)
+        context['article_content'] = models.Comment.objects.get(pk=self.kwargs['comment_pk']).values('article').values('content')
+        return context
+    
+    
+    
+    
 
 
 @login_required
