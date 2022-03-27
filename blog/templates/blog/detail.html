@@ -35,7 +35,12 @@
 			{% for comment in comments %}
 			<li>
 				{{comment.content}}
+				{% if user == comment.user %}
 				<a href="{% url 'edit_comment' comment.pk article.pk %}">編集</a>
+				{{ user.username }}
+				{{ user }}
+				{{ comment.user }}
+				{% endif %}
 			</li>
 
 			{% endfor %}
