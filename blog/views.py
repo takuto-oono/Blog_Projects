@@ -161,21 +161,21 @@ class CreateCommentView(CreateView, LoginRequiredMixin):
         form.save()
 
         return super().form_valid(form)
-    
-    
+
+
 class EditComment(UpdateView, LoginRequiredMixin):
     template_name = 'blog/edit_comment.html'
     model = models.Comment
     field = ['content']
-    
+
     def get_context_data(self, **kwargs):
         context = super(EditComment, self).get_context_data(**kwargs)
-        context['article_content'] = models.Article.objects.get(pk=self.kwargs['article_pk']).values('content')
+        context['article_content'] = models.Article.objects.get(
+            pk=self.kwargs['article_pk']).values('content')
         return context
-    
-    
-    
-    
+
+    def get_success_url(self):
+        return reverse('detail_article', kwargs={'pk': self.kwargs['article_pk']})
 
 
 @login_required
