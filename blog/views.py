@@ -10,6 +10,7 @@ from django import http
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.http import Http404
 
 
 class CategoryList(ListView):
@@ -177,6 +178,12 @@ class EditComment(UpdateView, LoginRequiredMixin):
     def get_success_url(self):
         return reverse('detail_article', kwargs={'pk': self.kwargs['article_pk']})
 
+    def form_valid(self, form):
+        form = form.save(commit=False)
+        if form.user == self.request.user:
+            form.save()
+        else:
+            raise Http404('編集権限がありません')
 
 @login_required
 def do_good(request, article_pk):
