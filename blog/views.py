@@ -170,7 +170,7 @@ class EditComment(UpdateView, LoginRequiredMixin):
     
     def get_context_data(self, **kwargs):
         context = super(EditComment, self).get_context_data(**kwargs)
-        context['article_content'] = models.Comment.objects.get(pk=self.kwargs['comment_pk']).values('article').values('content')
+        context['article_content'] = models.Article.objects.get(pk=self.kwargs['article_pk']).values('content')
         return context
     
     
