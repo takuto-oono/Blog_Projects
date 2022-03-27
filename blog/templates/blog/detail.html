@@ -33,7 +33,16 @@
 		<div id="comment">
             <p>コメント</p>
 			{% for comment in comments %}
-			<li>{{comment.content}}</li>
+			<li>
+				{{comment.content}}
+				{% if user == comment.user %}
+				<a href="{% url 'edit_comment' comment.pk article.pk %}">編集</a>
+				{{ user.username }}
+				{{ user }}
+				{{ comment.user }}
+				{% endif %}
+			</li>
+
 			{% endfor %}
 		</div>
 	</div>
