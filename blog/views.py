@@ -28,12 +28,12 @@ class ArticleList(ListView):
     template_name = 'blog/index.html'
     model = models.Article
     paginate_by = 10
-    
+
     def get_queryset(self):
         queryset = super().get_queryset()
         queryset.filter(is_public=True).order_by('-public_date', '-good_count')
         return queryset
-    
+
     def get_good_article_list(self):
         good_article_list = []
         for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
@@ -65,7 +65,8 @@ class CategoryDetail(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(CategoryDetail, self).get_context_data(**kwargs)
-        category = models.Category.objects.get(pk=self.kwargs['category_pk'], is_public=True)
+        category = models.Category.objects.get(
+            pk=self.kwargs['category_pk'], is_public=True)
         context.update({
             'article_list': models.Article.objects.filter(is_public=True, category=category)
         })
@@ -87,7 +88,8 @@ class ArticleDetail(DetailView):
     # @method_decorator(login_required)
     def get_recommended_article_list(self):
         recommended_article_list = []
-        articles = models.Article.objects.filter(is_public=True).order_by('-good_count', '-public_date')
+        articles = models.Article.objects.filter(
+            is_public=True).order_by('-good_count', '-public_date')
         for article in articles:
             if self.request.user in article.read_later_user.all():
                 recommended_article_list.append(article)
@@ -101,7 +103,8 @@ class ArticleDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
-        article = get_object_or_404(models.Article, id=self.kwargs['pk'], is_public=True)
+        article = get_object_or_404(
+            models.Article, id=self.kwargs['pk'], is_public=True)
         if self.request.user.is_authenticated:
             self.write_browsing_history(article)
             context.update({
@@ -123,54 +126,6 @@ class ArticleDetail(DetailView):
         return models.Article.objects.filter(is_public=True)
 
 
-class AdminArticleList(ListView, LoginRequiredMixin):
-    template_name = 'admin/admin_article_list.html'
-    model = models.Article
-
-    def get_context_data(self, **kwargs):
-        context = super(AdminArticleList, self).get_context_data()
-        context.update({
-            'article_list': models.Article.objects.all()
-        })
-        return context
-
-
-class CreateArticle(CreateView, LoginRequiredMixin):
-    template_name = 'admin/create_article.html'
-    model = models.Article
-    fields = ['title', 'content', 'picture', 'is_public', 'category']
-
-    def get_success_url(self):
-        return reverse('index')
-
-    def form_valid(self, form):
-        form = form.save(commit=False)
-        form.user = self.request.user
-        form.public_date = datetime.date.today()
-        form.save()
-        return super().form_valid(form)
-
-
-class EditArticle(UpdateView, LoginRequiredMixin):
-    template_name = 'admin/edit_article.html'
-    model = models.Article
-    fields = [
-        'title',
-        'content',
-        'picture',
-        'is_public',
-    ]
-
-    def get_success_url(self):
-        return reverse('admin_article_list')
-
-    def form_valid(self, form):
-        form = form.save(commit=False)
-        form.public_date = datetime.date.today()
-        form.save()
-        return super().form_valid(form)
-
-
 # class DeleteArticle(DeleteView):
 #     model = models.Article
 #     success_url = '/admin_admin/'
@@ -189,10 +144,11 @@ class CreateCommentView(CreateView, LoginRequiredMixin):
     template_name = 'blog/create_comment.html'
     model = models.Comment
     fields = ['content']
-    
+
     def get_context_data(self, **kwargs):
         context = super(CreateCommentView, self).get_context_data(**kwargs)
-        context['article_content'] = models.Article.objects.get(pk=self.kwargs['article_pk'])
+        context['article_content'] = models.Article.objects.get(
+            pk=self.kwargs['article_pk'])
         return context
 
     def get_success_url(self, **kwargs):
