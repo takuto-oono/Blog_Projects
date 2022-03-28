@@ -14,7 +14,7 @@
 	<div id="article-detail">
 		<div id="article-header">
 			<img src="{{ article.picture.url }}" />
-            <p id="article-title">{{ article.title }}</p>
+			<p id="article-title">{{ article.title }}</p>
 			<ul>
 				<li>
 					<a href="{% url 'do_good' article.pk %}">いいね</a>
@@ -31,16 +31,13 @@
 			<p>{{ article.content }}</p>
 		</div>
 		<div id="comment">
-            <p>コメント</p>
+			<p>コメント</p>
 			{% for comment in comments %}
 			<li>
-				{{comment.content}}
-				{% if user == comment.user %}
+				{{comment.content}} {% if user == comment.user %}
 				<a href="{% url 'edit_comment' comment.pk article.pk %}">編集</a>
-				{{ user.username }}
-				{{ user }}
-				{{ comment.user }}
-				{% endif %}
+				<a href="{% url 'delete_comment' comment.pk article.pk %}">削除</a>
+				{{ user.username }} {{ user }} {{ comment.user }} {% endif %}
 			</li>
 
 			{% endfor %}

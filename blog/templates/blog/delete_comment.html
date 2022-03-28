@@ -1,0 +1,11 @@
+{% extends './base.html' %} {% block content %}
+<div id="delete-comment">
+    <form method="post">{% csrf_token %}
+        <p>このコメントを削除しますか？ "{{ object }}"?</p>
+        <a href="{% url 'detail_article' article_pk %}">戻る</a>
+        <input type="submit" value="削除">
+    </form>
+</div>
+
+
+{% endblock %}

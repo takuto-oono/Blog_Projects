@@ -1,3 +1,4 @@
+from unicodedata import name
 from django.urls import path
 from . import views
 from django.conf.urls.static import static
@@ -11,6 +12,7 @@ urlpatterns = [
         views.CreateCommentView.as_view(), name='create_comment'),
     path('edit/commet/<int:pk>/<int:article_pk>/',
         views.EditComment.as_view(), name='edit_comment'),
+    path('delete/comment/<int:pk>/<int:article_pk>', views.DeleteComment.as_view(), name='delete_comment'),
     path('do_good/<int:article_pk>', views.do_good, name='do_good'),
     path('read_later/<int:article_pk>', views.read_later, name='read_later'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

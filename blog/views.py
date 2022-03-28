@@ -2,6 +2,7 @@ import http.client
 from re import T
 from sysconfig import is_python_build
 from unicodedata import category
+from urllib import request
 
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView, DeleteView
 from . import forms
@@ -204,6 +205,25 @@ class EditComment(UpdateView, LoginRequiredMixin):
             return super().form_valid(form)
         else:
             raise Http404('編集権限がありません')
+
+
+class DeleteComment(DeleteView, LoginRequiredMixin):
+    template_name = 'blog/delete_comment.html'
+    model = models.Comment
+
+    def get_object(self, queryset=None):
+        obj = super(DeleteComment, self).get_object()
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
+
+    def get_success_url(self, **kwargs) -> str:
+        return reverse('detail_article', kwargs={'pk': self.kwargs['article_pk']})
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteComment, self).get_context_data(**kwargs)
+        context['article_pk'] = self.kwargs['article_pk']
+        return context
 
 
 @login_required
