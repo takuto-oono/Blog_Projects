@@ -210,15 +210,20 @@ class EditComment(UpdateView, LoginRequiredMixin):
 class DeleteComment(DeleteView, LoginRequiredMixin):
     template_name = 'blog/delete_comment.html'
     model = models.Comment
-    
+
     def get_object(self, queryset=None):
         obj = super(DeleteComment, self).get_object()
         if not obj.user == self.request.user:
             raise Http404
         return obj
-    
+
     def get_success_url(self, **kwargs) -> str:
         return reverse('detail_article', kwargs={'pk': self.kwargs['article_pk']})
+
+    def get_context_data(self, **kwargs):
+        context = super(DeleteComment, self).get_context_data(**kwargs)
+        context['article_pk'] = self.kwargs['article_pk']
+        return context
 
 
 @login_required
