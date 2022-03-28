@@ -1,4 +1,7 @@
 import http.client
+from re import T
+from sysconfig import is_python_build
+from unicodedata import category
 
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView, DeleteView
 from . import forms
@@ -30,10 +33,27 @@ class ArticleList(ListView):
     model = models.Article
     paginate_by = 10
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset.filter(is_public=True).order_by('-public_date', '-good_count')
-        return queryset
+    def get_queryset(self, **kwargs):
+        if self.kwargs:
+            queryset = models.Article.objects.filter(
+                is_public=True, category=models.Category.objects.get(pk=self.kwargs['category_pk']))
+            return queryset.order_by('-public_date', '-good_count')
+        else:
+            queryset = models.Article.objects.filter(is_public=True)
+            return queryset.order_by('-public_date', '-good_count')
+
+    # def get_queryset(self, **kwargs):
+    #     queryset = models.Article.objects.all.filter(is_public=True)
+    #     queryset = super().get_queryset()
+    #     print(models.Article.objects.filter(category=models.Category.objects.get(pk=25)))
+    #     if self.kwargs:
+    #         print(self.kwargs['category_pk'])
+    #         print(models.Article.objects.filter(category=models.Category.objects.get(pk=self.kwargs['category_pk'])))
+    #         queryset.filter(category=models.Category.objects.get(pk=self.kwargs['category_pk']))
+    #         print(queryset)
+    #     else:
+    #         queryset.filter(is_public=True)
+    #     return queryset.order_by('-public_date', '-good_count')
 
     def get_good_article_list(self):
         good_article_list = []
@@ -54,7 +74,6 @@ class ArticleList(ListView):
         context = super(ArticleList, self).get_context_data(**kwargs)
         context.update({
             'category_list': models.Category.objects.filter(is_public=True),
-            'article_list': models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'),
             'good_article_list': self.get_good_article_list(),
             'read_later_list': self.get_later_article_list(),
         })
@@ -185,6 +204,7 @@ class EditComment(UpdateView, LoginRequiredMixin):
             return super().form_valid(form)
         else:
             raise Http404('編集権限がありません')
+
 
 @login_required
 def do_good(request, article_pk):
