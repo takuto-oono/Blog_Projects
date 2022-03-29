@@ -8,6 +8,7 @@ urlpatterns = [
     path('<int:category_pk>', views.ArticleList.as_view(), name='category'),
     path('', views.ArticleList.as_view(), name='index'),
     path('detail/<int:pk>', views.ArticleDetail.as_view(), name='detail_article'),
+    path('get_good_count_ajax', views.get_good_count_ajax, name='get_good_count_ajax'),
     path('create_comment/<int:article_pk>',
         views.CreateCommentView.as_view(), name='create_comment'),
     path('edit/commet/<int:pk>/<int:article_pk>/',
