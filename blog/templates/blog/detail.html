@@ -58,17 +58,17 @@
 </div>
 <script>
 	function GetGoodCountAjax() {
+		console.log('hello getgood')
 		$.ajax({
 			'type': 'GET',
 			'url': "{% url 'get_good_count_ajax' article.pk %}",
 			'data': {
-				'article_pk': article.pk.toString(),
 			},
 			'dataType': 'json',
 		})
 		.done(response => {
-			$('#good-count').empty();
-			$('good-count').append(response);
+			console.log(response['good_count'])
+			$('#good-count').html("<p>" + response['good_count'] + "</p>")
 		});
 	}
 

@@ -152,7 +152,7 @@ def get_good_count_ajax(request, article_pk):
 
     good_count = models.Article.objects.get(pk=article_pk).good_count
 
-    return JsonResponse('good_count': good_count)
+    return JsonResponse({'good_count': good_count})
 
 # class DeleteArticle(DeleteView):
 #     model = models.Article
