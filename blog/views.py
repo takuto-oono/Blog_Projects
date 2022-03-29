@@ -15,6 +15,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import Http404
+from django.http import JsonResponse
 
 
 class CategoryList(ListView):
@@ -146,6 +147,12 @@ class ArticleDetail(DetailView):
     def get_queryset(self):
         return models.Article.objects.filter(is_public=True)
 
+
+def get_good_count_ajax(request, article_pk):
+    
+    good_count = models.Article.objects.get(pk=article_pk).good_count
+    
+    return JsonResponse('good_count': good_count)
 
 # class DeleteArticle(DeleteView):
 #     model = models.Article
