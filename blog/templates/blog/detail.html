@@ -15,6 +15,7 @@
 		<div id="article-header">
 			<img src="{{ article.picture.url }}" />
 			<p id="article-title">{{ article.title }}</p>
+			<p id="good-count">{{ article.good_count }}</p>
 			<ul>
 				<li>
 					<a href="{% url 'do_good' article.pk %}">いいね</a>
@@ -55,5 +56,22 @@
 		{% endfor %}
 	</div>
 </div>
+<script>
+	function GetGoodCountAjax() {
+		console.log('hello getgood')
+		$.ajax({
+			'type': 'GET',
+			'url': "{% url 'get_good_count_ajax' article.pk %}",
+			'data': {
+			},
+			'dataType': 'json',
+		})
+		.done(response => {
+			console.log(response['good_count'])
+			$('#good-count').html("<p>" + response['good_count'] + "</p>")
+		});
+	}
 
+	setInterval(GetGoodCountAjax, 3000);
+</script>
 {% endblock %}
