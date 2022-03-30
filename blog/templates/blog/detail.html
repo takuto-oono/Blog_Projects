@@ -1,77 +1,135 @@
 {% extends './base.html' %} {% block content %}
 
-<div id="detail">
-	<div id="category-list">
-		<p>カテゴリー</p>
-		<ul>
-			{% for category in category_list %}
-			<li>
-				<a href="{% url 'category' category.pk %}">{{ category.title }}</a>
-			</li>
-			{% endfor %}
-		</ul>
-	</div>
-	<div id="article-detail">
-		<div id="article-header">
-			<img src="{{ article.picture.url }}" />
-			<p id="article-title">{{ article.title }}</p>
-			<p id="good-count">{{ article.good_count }}</p>
-			<ul>
-				<li>
-					<a href="{% url 'do_good' article.pk %}">いいね</a>
-				</li>
-				<li>
-					<a href="{% url 'read_later' article.pk %}">後で読む</a>
-				</li>
-				<li>
-					<a href="{% url 'create_comment' article.pk %}">コメントを書く</a>
-				</li>
-			</ul>
-		</div>
-		<div id="content-article">
-			<p>{{ article.content }}</p>
-		</div>
-		<div id="comment">
-			<p>コメント</p>
-			{% for comment in comments %}
-			<li>
-				{{comment.content}} {% if user == comment.user %}
-				<a href="{% url 'edit_comment' comment.pk article.pk %}">編集</a>
-				<a href="{% url 'delete_comment' comment.pk article.pk %}">削除</a>
-				{{ user.username }} {{ user }} {{ comment.user }} {% endif %}
-			</li>
+    <div id="detail">
+        <div id="category-list">
+            <p>カテゴリー</p>
+            <ul>
+                {% for category in category_list %}
+                    <li>
+                        <a href="{% url 'category' category.pk %}">{{ category.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div id="article-detail">
+            <div id="article-header">
+                <img src="{{ article.picture.url }}"/>
+                <p id="article-title">{{ article.title }}</p>
+                <p id="good-count">{{ article.good_count }}</p>
+                <ul>
+                    <li>
+                        <a href="{% url 'do_good' article.pk %}">いいね</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'read_later' article.pk %}">後で読む</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'create_comment' article.pk %}">コメントを書く</a>
+                    </li>
+                </ul>
+            </div>
+            <div id="content-article">
+                <p>{{ article.content }}</p>
+            </div>
+            <div id="comment">
+                <p>コメント</p>
+                {% for comment in comments %}
+                    <li id="{{ comment.pk }}">
+                        <p>{{ comment.content }}</p>
+                        {% if user == comment.user %}
+                        <a href="{% url 'edit_comment' comment.pk article.pk %}">編集</a>
+{#                        <a href="{% url 'delete_comment' comment.pk article.pk %}">削除</a>#}
+                        <input type="button" value="削除Ajax" onclick='DeleteCommentAjax({{ comment.pk }})'>
+                        {{ user.username }} {{ user }} {{ comment.user }}
+                        {% endif %}
+                    </li>
 
-			{% endfor %}
-		</div>
-	</div>
-	<div id="recommend_article_list">
-		{% for article in recommend_article_list %}
-		<li>
-			<img src="{{ article.picture.url }}" />
-			<a href="{% url 'detail_article' article.pk %}">
-				<p>{{ article.title }}</p>
-			</a>
-			<a href="{% url 'read_later' article.pk %}">後で読む</a>
-		</li>
-		{% endfor %}
-	</div>
-</div>
-<script>
-	function GetGoodCountAjax() {
-		console.log('hello getgood')
-		$.ajax({
-			'type': 'GET',
-			'url': "{% url 'get_good_count_ajax' article.pk %}",
-			'data': {
-			},
-			'dataType': 'json',
-		})
-		.done(response => {
-			console.log(response['good_count'])
-			$('#good-count').html("<p>" + response['good_count'] + "</p>")
-		});
-	}
+                {% endfor %}
+            </div>
+        </div>
+        <div id="recommend_article_list">
+            {% for article in recommend_article_list %}
+                <li>
+                    <img src="{{ article.picture.url }}"/>
+                    <a href="{% url 'detail_article' article.pk %}">
+                        <p>{{ article.title }}</p>
+                    </a>
+                    <a href="{% url 'read_later' article.pk %}">後で読む</a>
+                </li>
+            {% endfor %}
+        </div>
+    </div>
+    <script>
+        function GetGoodCountAjax() {
+            $.ajax({
+                'type': 'GET',
+                'url': "{% url 'get_good_count_ajax' article.pk %}",
+                'data': {},
+                'dataType': 'json',
+            })
+                .done(response => {
+                    console.log(response['good_count'])
+                    $('#good-count').html("<p>" + response['good_count'] + "</p>")
+                });
+        }
 
-	setInterval(GetGoodCountAjax, 3000);
-</script>
+        setInterval(GetGoodCountAjax, 3000);
+    </script>
+    <script>
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $.ajaxSetup({
+            beforeSend: function (xhr, settings) {
+                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            }
+        });
+
+        function AddDeleteClass(comment_pk) {
+            console.log('AddClass')
+            document.getElementById(comment_pk).classList.add('delete-comment')
+        }
+
+        function DeleteCommentAjax(comment_pk) {
+            console.log(comment_pk)
+            $.ajax({
+                'type': 'POST',
+                'url': "{% url 'delete_comment_Ajax' %}",
+                'data': {
+                    'comment_pk': comment_pk,
+                },
+                'dataType': 'json',
+            })
+                .done(response => {
+                    console.log(response['message']);
+                    document.getElementById(comment_pk).innerHTML = response['message']
+                    const timer = setTimeout(AddDeleteClass, 2000, comment_pk);
+                    console.log('exit');
+
+
+                });
+        }
+    </script>
 {% endblock %}

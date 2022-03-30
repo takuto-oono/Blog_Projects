@@ -1,19 +1,9 @@
-import http.client
-from re import T
-from sysconfig import is_python_build
-from unicodedata import category
-from urllib import request
-
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView, DeleteView
-from . import forms
 from . import models
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-import datetime
-from django import http
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.http import Http404
 from django.http import JsonResponse
 
@@ -43,19 +33,6 @@ class ArticleList(ListView):
         else:
             queryset = models.Article.objects.filter(is_public=True)
             return queryset.order_by('-public_date', '-good_count')
-
-    # def get_queryset(self, **kwargs):
-    #     queryset = models.Article.objects.all.filter(is_public=True)
-    #     queryset = super().get_queryset()
-    #     print(models.Article.objects.filter(category=models.Category.objects.get(pk=25)))
-    #     if self.kwargs:
-    #         print(self.kwargs['category_pk'])
-    #         print(models.Article.objects.filter(category=models.Category.objects.get(pk=self.kwargs['category_pk'])))
-    #         queryset.filter(category=models.Category.objects.get(pk=self.kwargs['category_pk']))
-    #         print(queryset)
-    #     else:
-    #         queryset.filter(is_public=True)
-    #     return queryset.order_by('-public_date', '-good_count')
 
     def get_good_article_list(self):
         good_article_list = []
@@ -149,23 +126,8 @@ class ArticleDetail(DetailView):
 
 
 def get_good_count_ajax(request, article_pk):
-
     good_count = models.Article.objects.get(pk=article_pk).good_count
-
     return JsonResponse({'good_count': good_count})
-
-# class DeleteArticle(DeleteView):
-#     model = models.Article
-#     success_url = '/admin_admin/'
-#     def get_success_url(self):
-#     return reverse('admin_article_list')
-
-# def delete(self, request, *args, **kwargs):
-#     self.object = self.get_object()
-#     if self.object.user == self.request.user:
-#         self.object.delete()
-#         return http.HttpResponseRedirect(self.success_url)
-#     else:
 
 
 class CreateCommentView(CreateView, LoginRequiredMixin):
@@ -214,23 +176,40 @@ class EditComment(UpdateView, LoginRequiredMixin):
             raise Http404('編集権限がありません')
 
 
-class DeleteComment(DeleteView, LoginRequiredMixin):
-    template_name = 'blog/delete_comment.html'
-    model = models.Comment
+# class DeleteComment(DeleteView, LoginRequiredMixin):
+#     template_name = 'blog/delete_comment.html'
+#     model = models.Comment
+#
+#     def get_object(self, queryset=None):
+#         obj = super(DeleteComment, self).get_object()
+#         if not obj.user == self.request.user:
+#             raise Http404
+#         return obj
+#
+#     def get_success_url(self, **kwargs) -> str:
+#         return reverse('detail_article', kwargs={'pk': self.kwargs['article_pk']})
+#
+#     def get_context_data(self, **kwargs):
+#         context = super(DeleteComment, self).get_context_data(**kwargs)
+#         context['article_pk'] = self.kwargs['article_pk']
+#         return context
 
-    def get_object(self, queryset=None):
-        obj = super(DeleteComment, self).get_object()
-        if not obj.user == self.request.user:
-            raise Http404
-        return obj
 
-    def get_success_url(self, **kwargs) -> str:
-        return reverse('detail_article', kwargs={'pk': self.kwargs['article_pk']})
-
-    def get_context_data(self, **kwargs):
-        context = super(DeleteComment, self).get_context_data(**kwargs)
-        context['article_pk'] = self.kwargs['article_pk']
-        return context
+@login_required
+def delete_comment_ajax(request):
+    comment_pk = request.POST.get('comment_pk')
+    print(comment_pk)
+    comment = models.Comment.objects.get(pk=comment_pk)
+    if comment.user == request.user:
+        comment.delete()
+        response = {
+            'message': 'このコメントを削除しました。'
+        }
+    else:
+        response = {
+            'message': 'このコメントは削除できません。'
+        }
+    return JsonResponse(response)
 
 
 @login_required
