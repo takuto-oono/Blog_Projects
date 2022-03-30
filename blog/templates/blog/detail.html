@@ -38,7 +38,7 @@
                         <p>{{ comment.content }}</p>
                         {% if user == comment.user %}
                         <a href="{% url 'edit_comment' comment.pk article.pk %}">編集</a>
-                        <a href="{% url 'delete_comment' comment.pk article.pk %}">削除</a>
+{#                        <a href="{% url 'delete_comment' comment.pk article.pk %}">削除</a>#}
                         <input type="button" value="削除Ajax" onclick='DeleteCommentAjax({{ comment.pk }})'>
                         {{ user.username }} {{ user }} {{ comment.user }}
                         {% endif %}
