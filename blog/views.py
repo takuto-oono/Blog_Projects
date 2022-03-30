@@ -203,7 +203,7 @@ def delete_comment_ajax(request):
     if comment.user == request.user:
         comment.delete()
         response = {
-            'message': 'コメントを削除しました。'
+            'message': 'このコメントを削除しました。'
         }
     else:
         response = {

@@ -34,12 +34,14 @@
             <div id="comment">
                 <p>コメント</p>
                 {% for comment in comments %}
-                    <li>
-                        {{ comment.content }} {% if user == comment.user %}
+                    <li id="{{ comment.pk }}">
+                        <p>{{ comment.content }}</p>
+                        {% if user == comment.user %}
                         <a href="{% url 'edit_comment' comment.pk article.pk %}">編集</a>
                         <a href="{% url 'delete_comment' comment.pk article.pk %}">削除</a>
                         <input type="button" value="削除Ajax" onclick='DeleteCommentAjax({{ comment.pk }})'>
-                        {{ user.username }} {{ user }} {{ comment.user }} {% endif %}
+                        {{ user.username }} {{ user }} {{ comment.user }}
+                        {% endif %}
                     </li>
 
                 {% endfor %}
@@ -66,6 +68,7 @@
                 'dataType': 'json',
             })
                 .done(response => {
+                    console.log(response['good_count'])
                     $('#good-count').html("<p>" + response['good_count'] + "</p>")
                 });
         }
@@ -104,6 +107,11 @@
             }
         });
 
+        function AddDeleteClass(comment_pk) {
+            console.log('AddClass')
+            document.getElementById(comment_pk).classList.add('delete-comment')
+        }
+
         function DeleteCommentAjax(comment_pk) {
             console.log(comment_pk)
             $.ajax({
@@ -116,6 +124,11 @@
             })
                 .done(response => {
                     console.log(response['message']);
+                    document.getElementById(comment_pk).innerHTML = response['message']
+                    const timer = setTimeout(AddDeleteClass, 2000, comment_pk);
+                    console.log('exit');
+
+
                 });
         }
     </script>
