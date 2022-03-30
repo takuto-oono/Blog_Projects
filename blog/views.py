@@ -8,18 +8,6 @@ from django.http import Http404
 from django.http import JsonResponse
 
 
-class CategoryList(ListView):
-    template_name = 'blog/category.html'
-    model = models.Category
-
-    def get_context_data(self, **kwargs):
-        context = super(CategoryList, self).get_context_data(**kwargs)
-        context.update({
-            'article_list': models.Article.objects.filter(is_public=True,
-                                                          category=models.Category(pk=self.kwargs['category_pk'])),
-        })
-
-
 class ArticleList(ListView):
     template_name = 'blog/index.html'
     model = models.Article
