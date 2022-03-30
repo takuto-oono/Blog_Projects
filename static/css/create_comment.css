@@ -1,44 +1,35 @@
 #create-comment {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
 }
-
 #create-comment .form {
   width: 50%;
 }
-
 #create-comment .form #form {
   text-align: center;
 }
-
 #create-comment .form #form p {
   margin-bottom: 10px;
 }
-
 #create-comment .form #form input {
   width: 80%;
   border: 2px solid black;
 }
-
 #create-comment .form #form .form-group input {
   width: 80%;
   height: 600px;
   margin-bottom: 10px;
 }
-
 #create-comment #article-content {
   width: 50%;
 }
-
 #create-comment #article-content p {
   margin: 0 auto;
   width: 80%;
   margin-bottom: 10px;
 }
-
 #create-comment #article-content .content {
   padding: 20px;
   border: 2px solid black;
 }
+
 /*# sourceMappingURL=create_comment.css.map */

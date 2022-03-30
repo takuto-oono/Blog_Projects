@@ -1,19 +1,9 @@
-import http.client
-from re import T
-from sysconfig import is_python_build
-from unicodedata import category
-from urllib import request
-
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView, DeleteView
-from . import forms
 from . import models
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-import datetime
-from django import http
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.http import Http404
 from django.http import JsonResponse
 
@@ -206,7 +196,9 @@ class DeleteComment(DeleteView, LoginRequiredMixin):
 
 
 @login_required
-def delete_comment_Ajax(request, comment_pk):
+def delete_comment_ajax(request):
+    comment_pk = request.POST.get('comment_pk')
+    print(comment_pk)
     comment = models.Comment.objects.get(pk=comment_pk)
     if comment.user == request.user:
         comment.delete()
