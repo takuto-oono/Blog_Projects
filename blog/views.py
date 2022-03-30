@@ -206,6 +206,21 @@ class DeleteComment(DeleteView, LoginRequiredMixin):
 
 
 @login_required
+def delete_comment_Ajax(request, comment_pk):
+    comment = models.Comment.objects.get(pk=comment_pk)
+    if comment.user == request.user:
+        comment.delete()
+        response = {
+            'message': 'コメントを削除しました。'
+        }
+    else:
+        response = {
+            'message': 'このコメントは削除できません。'
+        }
+    return JsonResponse(response)
+
+
+@login_required
 def do_good(request, article_pk):
     article = models.Article.objects.get(pk=article_pk)
     user = request.user
