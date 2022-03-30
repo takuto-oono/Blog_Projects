@@ -11,7 +11,7 @@ urlpatterns = [
                        views.get_good_count_ajax, name='get_good_count_ajax'),
                   path('create_comment/<int:article_pk>',
                        views.CreateCommentView.as_view(), name='create_comment'),
-                  path('edit/commet/<int:pk>/<int:article_pk>/',
+                  path('edit_commet/<int:pk>/<int:article_pk>/',
                        views.EditComment.as_view(), name='edit_comment'),
                   # path('delete/comment/<int:pk>/<int:article_pk>',
                   # views.DeleteComment.as_view(), name='delete_comment'),
