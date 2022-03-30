@@ -1,14 +1,15 @@
 {% extends "./base.html" %}
 {% block content %}
-<div id="show-user-comment">
-    <p>自分のコメント一覧</p>
-    <ul>
-        {% for comment in object_list %}
-        <li>
-            <p>{{ comment.content }}</p>
-            <a href="{% url 'detail_article' comment.article.pk %}"><p>{{ comment.article.title }}</p></a>
-        </li>
-        {% endfor %}
-    </ul>
-</div>
+    <div id="show-user-comment">
+        <p>自分のコメント一覧</p>
+        <ul>
+            {% for comment in object_list %}
+                <li>
+                    <p>{{ comment.content }}</p>
+                    <a href="{% url 'detail_article' comment.article.pk %}"><p>{{ comment.article.title }}</p></a>
+                    <a href="{% url 'edit_comment' comment.pk comment.article.pk %}">編集する</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}
