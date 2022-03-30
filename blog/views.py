@@ -8,18 +8,6 @@ from django.http import Http404
 from django.http import JsonResponse
 
 
-class CategoryList(ListView):
-    template_name = 'blog/category.html'
-    model = models.Category
-
-    def get_context_data(self, **kwargs):
-        context = super(CategoryList, self).get_context_data(**kwargs)
-        context.update({
-            'article_list': models.Article.objects.filter(is_public=True,
-                                                          category=models.Category(pk=self.kwargs['category_pk'])),
-        })
-
-
 class ArticleList(ListView):
     template_name = 'blog/index.html'
     model = models.Article
@@ -128,6 +116,15 @@ class ArticleDetail(DetailView):
 def get_good_count_ajax(request, article_pk):
     good_count = models.Article.objects.get(pk=article_pk).good_count
     return JsonResponse({'good_count': good_count})
+
+
+class ShowUserComment(ListView, LoginRequiredMixin):
+    template_name = 'blog/show_comment.html'
+    model = models.Comment
+
+    def get_queryset(self):
+        queryset = models.Comment.objects.filter(user=self.request.user)
+        return queryset
 
 
 class CreateCommentView(CreateView, LoginRequiredMixin):
