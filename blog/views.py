@@ -169,6 +169,7 @@ class EditComment(UpdateView, LoginRequiredMixin):
     def form_valid(self, form):
         form = form.save(commit=False)
         if form.user == self.request.user:
+            form.date = datetime.now()
             form.save()
             return super().form_valid(form)
         else:
