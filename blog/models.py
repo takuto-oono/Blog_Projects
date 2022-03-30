@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from datetime import datetime
 
 
 class Category(models.Model):
@@ -32,7 +33,7 @@ class Article(models.Model):
     )
     is_public = models.BooleanField(
         default=False, choices=PUBLIC_SETTINGS_CHOICES, verbose_name='公開設定')
-    public_date = models.DateField(verbose_name='公開日')
+    public_date = models.DateField(verbose_name='更新日', default=datetime.now)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='カテゴリー', null=True, blank=True)
     good_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='高評価ユーザー', related_name='good_user')
     good_count = models.IntegerField(default=0, verbose_name='いいねの数')
@@ -55,7 +56,7 @@ class Comment(models.Model):
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, verbose_name='投稿者')
     date = models.DateField(
-        verbose_name='公開日', default=timezone.datetime.today())
+        verbose_name='更新日', default=datetime.now)
     comment_goods = models.IntegerField(default=0, verbose_name='いいね')
 
     def __str__(self):
