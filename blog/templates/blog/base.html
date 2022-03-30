@@ -17,7 +17,7 @@
 <header>
     <ul>
         <li>
-            <h1>Blog</h1>
+            <a href="{% url 'index' %}"><h1>Blog</h1></a>
         </li>
         <ul>
             {% if request.user.is_authenticated %}
