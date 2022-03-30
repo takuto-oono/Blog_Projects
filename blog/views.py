@@ -44,19 +44,6 @@ class ArticleList(ListView):
             queryset = models.Article.objects.filter(is_public=True)
             return queryset.order_by('-public_date', '-good_count')
 
-    # def get_queryset(self, **kwargs):
-    #     queryset = models.Article.objects.all.filter(is_public=True)
-    #     queryset = super().get_queryset()
-    #     print(models.Article.objects.filter(category=models.Category.objects.get(pk=25)))
-    #     if self.kwargs:
-    #         print(self.kwargs['category_pk'])
-    #         print(models.Article.objects.filter(category=models.Category.objects.get(pk=self.kwargs['category_pk'])))
-    #         queryset.filter(category=models.Category.objects.get(pk=self.kwargs['category_pk']))
-    #         print(queryset)
-    #     else:
-    #         queryset.filter(is_public=True)
-    #     return queryset.order_by('-public_date', '-good_count')
-
     def get_good_article_list(self):
         good_article_list = []
         for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
@@ -149,23 +136,8 @@ class ArticleDetail(DetailView):
 
 
 def get_good_count_ajax(request, article_pk):
-
     good_count = models.Article.objects.get(pk=article_pk).good_count
-
     return JsonResponse({'good_count': good_count})
-
-# class DeleteArticle(DeleteView):
-#     model = models.Article
-#     success_url = '/admin_admin/'
-#     def get_success_url(self):
-#     return reverse('admin_article_list')
-
-# def delete(self, request, *args, **kwargs):
-#     self.object = self.get_object()
-#     if self.object.user == self.request.user:
-#         self.object.delete()
-#         return http.HttpResponseRedirect(self.success_url)
-#     else:
 
 
 class CreateCommentView(CreateView, LoginRequiredMixin):
