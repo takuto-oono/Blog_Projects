@@ -38,6 +38,7 @@
 				{{comment.content}} {% if user == comment.user %}
 				<a href="{% url 'edit_comment' comment.pk article.pk %}">編集</a>
 				<a href="{% url 'delete_comment' comment.pk article.pk %}">削除</a>
+				<a href="{% url 'delete_comment_Ajax' comment.pk %}">Ajax削除</a>
 				{{ user.username }} {{ user }} {{ comment.user }} {% endif %}
 			</li>
 
@@ -73,5 +74,20 @@
 	}
 
 	setInterval(GetGoodCountAjax, 3000);
+</script>
+<script>
+	function DeleteCommentAjax() {
+		$.ajax({
+			'type': 'POST',
+			'url': "{% url 'delete_comment_Ajax' comment.pk %}",
+			'data': {
+
+			},
+			'dataType': 'json',
+		})
+		.done(response => {
+			console.log(response['message']);
+		});
+	}
 </script>
 {% endblock %}
