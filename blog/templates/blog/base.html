@@ -22,6 +22,9 @@
         <ul>
             {% if request.user.is_authenticated %}
                 <li>
+                    <a href="{% url 'show_user_comment' %}">自分のコメント一覧</a>
+                </li>
+                <li>
                     <a href="{% url 'logout' %}">ログアウト</a>
                 </li>
             {% else %}

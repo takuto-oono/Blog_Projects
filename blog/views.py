@@ -118,6 +118,15 @@ def get_good_count_ajax(request, article_pk):
     return JsonResponse({'good_count': good_count})
 
 
+class ShowUserComment(ListView, LoginRequiredMixin):
+    template_name = 'blog/show_comment.html'
+    model = models.Comment
+
+    def get_queryset(self):
+        queryset = models.Comment.objects.filter(user=self.request.user)
+        return queryset
+
+
 class CreateCommentView(CreateView, LoginRequiredMixin):
     template_name = 'blog/create_comment.html'
     model = models.Comment
