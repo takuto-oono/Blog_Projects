@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.http import JsonResponse
+from datetime import datetime
 
 
 class ArticleList(ListView):
@@ -145,6 +146,7 @@ class CreateCommentView(CreateView, LoginRequiredMixin):
         form = form.save(commit=False)
         form.article = models.Article.objects.get(pk=self.kwargs['article_pk'])
         form.user = self.request.user
+        form.date = datetime.now()
         form.save()
 
         return super().form_valid(form)
