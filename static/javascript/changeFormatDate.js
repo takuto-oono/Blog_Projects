@@ -28,13 +28,13 @@ function GetDiffDay(nowDate, date) {
 
 function CreateHTML(dif, date) {
     let showDate = '';
-    if (dif == 0) {
+    if (dif === 0) {
         showDate = '今日';
-    } else if (dif == 1) {
+    } else if (dif === 1) {
         showDate = '昨日';
-    } else if (dif == 2) {
+    } else if (dif === 2) {
         showDate = '2日前';
-    } else if (dif == 3) {
+    } else if (dif === 3) {
         showDate = '3日前';
     } else {
         showDate = date.getFullYear() + '/' + date.getMonth() + 1 + '/' + date.getDate();
