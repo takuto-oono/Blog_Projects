@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 from . import models
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
