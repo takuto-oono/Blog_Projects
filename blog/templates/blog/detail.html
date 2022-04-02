@@ -14,9 +14,11 @@
         <div id="article-detail">
             <div id="article-header">
                 <img src="{{ article.picture.url }}"/>
-                <p id="article-title">{{ article.title }}</p>
-                <p id="category-title">{{ article.category.title }}</p>
-                <p id="good-count">{{ article.good_count }}</p>
+                <p id="article-title">{{ article.title }}</p
+                <ul>
+                    <p class="right">{{ article.category.title }}</p>
+                    <p class="right">{{ article.good_count }}</p>
+                </ul>
                 <ul>
                     <li>
                         <a href="{% url 'do_good' article.pk %}">いいね</a>
