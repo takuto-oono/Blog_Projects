@@ -7,23 +7,33 @@ body {
   margin: 0;
   padding: 0;
 }
+
 body header {
   width: 100%;
   margin: 0 auto;
 }
+
 body header ul {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: space-between;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
+
 body header ul li {
   padding: 5px 20px;
 }
+
 body header ul ul {
-  justify-content: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
+
 body header ul ul li {
   margin-left: 10px;
   margin-right: 10px;
 }
-
 /*# sourceMappingURL=base.css.map */
