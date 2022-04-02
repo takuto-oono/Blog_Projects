@@ -15,10 +15,8 @@
             <div id="article-header">
                 <img src="{{ article.picture.url }}"/>
                 <p id="article-title">{{ article.title }}</p
-                <ul>
-                    <p class="right">{{ article.category.title }}</p>
-                    <p class="right">{{ article.good_count }}</p>
-                </ul>
+                <a class="right" href="{% url 'category' article.category.pk %}">{{ article.category.title }}</a>
+                <p class="right">いいね {{ article.good_count }}</p>
                 <ul>
                     <li>
                         <a href="{% url 'do_good' article.pk %}">いいね</a>
