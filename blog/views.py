@@ -9,6 +9,10 @@ from django.http import JsonResponse
 from datetime import datetime
 
 
+# read: 1
+# good: 2
+# later: 3
+
 class ArticleList(ListView):
     template_name = 'blog/index.html'
     model = models.Article
