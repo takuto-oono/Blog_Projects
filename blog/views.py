@@ -74,9 +74,9 @@ class ArticleDetail(DetailView):
     def write_browsing_history(self, reading_article):
         if self.request.user:
             user = self.request.user
-            if models.UserArticleRelationship.objects.filter(article=reading_article, user=user):
+            if models.UserArticleRelationship.objects.filter(article=reading_article, user=user, action=1):
                 user_article_relationship = models.UserArticleRelationship.objects.get(article=reading_article,
-                                                                                       user=user)
+                                                                                       user=user, action=1)
                 user_article_relationship.date = datetime.now()
                 user_article_relationship.save()
             else:
@@ -237,18 +237,31 @@ def delete_comment_ajax(request):
 
 
 @login_required
-def do_good(request, article_pk):
+def do_good_ajax(request, article_pk):
     article = models.Article.objects.get(pk=article_pk)
     user = request.user
-    if user in article.good_user.all():
-        article.good_user.remove(user)
+    if models.UserArticleRelationship.objects.filter(user=user, article=article, action=2).count() == 1:
+        user_article_relationship = models.UserArticleRelationship.objects.get(user=user, article=article, action=2)
+        user_article_relationship.delete()
         article.good_count -= 1
+        response = {
+            'good_count': article.good_count
+        }
+        article.save()
     else:
-        article.good_user.add(user)
+        new_user_article_relationship = models.UserArticleRelationship()
+        new_user_article_relationship.user = user
+        new_user_article_relationship.article = article
+        new_user_article_relationship.action = 2
+        new_user_article_relationship.date = datetime.now()
         article.good_count += 1
+        response = {
+            'good_count': article.good_count
+        }
+        new_user_article_relationship.save()
+        article.save()
 
-    article.save()
-    return redirect('detail_article', article_pk)
+    return JsonResponse(response)
 
 
 @login_required
