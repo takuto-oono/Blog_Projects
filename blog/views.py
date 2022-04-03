@@ -133,6 +133,16 @@ def get_good_count_ajax(request, article_pk):
     return JsonResponse({'good_count': good_count})
 
 
+class ShowBrowsingHistory(ListView, LoginRequiredMixin):
+    template_name = 'blog/show_browsing_history.html'
+    model = models.UserArticleRelationship
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = models.UserArticleRelationship.objects.filter(user=self.request.user).order_by('date')
+        return queryset
+
+
 class ShowUserComment(ListView, LoginRequiredMixin):
     template_name = 'blog/show_comment.html'
     model = models.Comment
