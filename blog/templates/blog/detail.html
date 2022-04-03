@@ -16,14 +16,15 @@
                 <img src="{{ article.picture.url }}"/>
                 <p id="article-title">{{ article.title }}</p>
                 <a class="right" href="{% url 'category' article.category.pk %}">{{ article.category.title }}</a>
-                <p class="right">いいね</p><p id="good-count">{{ article.good_count }}</p>
+                <p class="right">いいね</p>
+                <p id="good-count">{{ article.good_count }}</p>
                 <ul>
                     <li>
                         <a href="{% url 'do_good_ajax' article.pk %}">いいね</a>
                         <input type="button" value="いいね" onclick="DoGoodAjax()">
                     </li>
                     <li>
-                        <a href="{% url 'read_later' article.pk %}">後で読む</a>
+                        <input type="button" value="後で読む" onclick="ReadLaterAjax({{ article.pk }})">
                     </li>
                     <li>
                         <a href="{% url 'create_comment' article.pk %}">コメントを書く</a>
@@ -57,7 +58,8 @@
                     <a href="{% url 'detail_article' article.pk %}">
                         <p>{{ article.title }}</p>
                     </a>
-                    <a href="{% url 'read_later' article.pk %}">後で読む</a>
+                    <input type="button" value="後で読む" onclick="ReadLaterAjax({{ article.pk }})">
+
                 </li>
             {% endfor %}
         </div>
