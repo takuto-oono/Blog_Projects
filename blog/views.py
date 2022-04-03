@@ -103,6 +103,12 @@ class ArticleDetail(DetailView):
                 recommended_article_list.append(article)
         return recommended_article_list
 
+    def get_is_good(self, article):
+        if models.UserArticleRelationship.objects.filter(user=self.request.user, article=article, action=2).count() > 0:
+            return '高評価を外す'
+        else:
+            return '高評価する'
+
     def get_context_data(self, **kwargs):
         context = super(ArticleDetail, self).get_context_data(**kwargs)
         article = get_object_or_404(
@@ -112,6 +118,7 @@ class ArticleDetail(DetailView):
             context.update({
                 'comments': models.Comment.objects.filter(article=article),
                 'good_cnt': article.good_count,
+                'good_button_value': self.get_is_good(article),
                 'recommend_article_list': self.get_recommended_article_list(),
                 'category_list': models.Category.objects.filter(is_public=True)
             })
@@ -119,6 +126,7 @@ class ArticleDetail(DetailView):
             context.update({
                 'comments': models.Comment.objects.filter(article=article),
                 'good_cnt': article.good_count,
+                'good_button_value': '高評価を外す',
 
             })
 
