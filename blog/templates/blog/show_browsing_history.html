@@ -1,0 +1,20 @@
+{% extends './base.html' %} {% block content %}
+
+    <div id="show-browsing-history">
+        <p>閲覧履歴</p>
+        <ul>
+            {% for user_article_relationship in object_list %}
+                <li>
+                    <img src="{{ user_article_relationship.article.picture.url }}" alt=""/>
+                    <div class="link">
+                        <a href="{% url 'detail_article' user_article_relationship.article.pk %}">
+                            <p>{{ user_article_relationship.article.title }}</p>
+                        </a>
+                    </div>
+                    <p class="date">{{ user_article_relationship.article.public_date }}</p>
+                    <p class="date">{{ user_article_relationship.date }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -18,6 +18,12 @@ class Category(models.Model):
     is_public = models.BooleanField(
         default=False, choices=PUBLIC_SETTINGS_CHOICES, verbose_name='公開設定')
 
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name_plural = 'カテゴリー'
+
 
 class Article(models.Model):
     title = models.CharField(
@@ -34,8 +40,10 @@ class Article(models.Model):
     is_public = models.BooleanField(
         default=False, choices=PUBLIC_SETTINGS_CHOICES, verbose_name='公開設定')
     public_date = models.DateField(verbose_name='更新日', default=datetime.now)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='カテゴリー', null=True, blank=True)
-    good_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='高評価ユーザー', related_name='good_user')
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, verbose_name='カテゴリー', null=True, blank=True)
+    good_user = models.ManyToManyField(
+        get_user_model(), blank=True, verbose_name='高評価ユーザー', related_name='good_user')
     good_count = models.IntegerField(default=0, verbose_name='いいねの数')
     read_later_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='後で読むユーザー',
                                              related_name='later_user')
@@ -47,6 +55,21 @@ class Article(models.Model):
 
     class Meta:
         verbose_name_plural = '記事'
+
+
+class UserArticleRelationship(models.Model):
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, verbose_name='ユーザー')
+    article = models.ForeignKey(
+        Article, on_delete=models.CASCADE, verbose_name='記事')
+    date = models.DateField(verbose_name='活動日', default=datetime.now)
+    action = models.IntegerField(default=0, verbose_name='活動内容')
+
+    def __str__(self):
+        return str(self.user.username) + ':' + str(self.article.title)
+
+    class Meta:
+        verbose_name_plural = '活動内容'
 
 
 class Comment(models.Model):

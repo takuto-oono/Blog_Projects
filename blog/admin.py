@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Article, Comment
+from .models import Category, Article, Comment, UserArticleRelationship
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -18,6 +18,18 @@ class ArticleAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Article, ArticleAdmin)
+
+
+class UserArticleRelationshipAdmin(admin.ModelAdmin):
+    fields = [
+        'user',
+        'article',
+        'date',
+        'action',
+    ]
+
+
+admin.site.register(UserArticleRelationship, UserArticleRelationshipAdmin)
 
 
 class CommentAdmin(admin.ModelAdmin):

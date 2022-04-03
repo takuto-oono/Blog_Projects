@@ -22,6 +22,9 @@
         <ul>
             {% if request.user.is_authenticated %}
                 <li>
+                    <a href="{% url 'show_browsing_history' %}">閲覧履歴</a>
+                </li>
+                <li>
                     <a href="{% url 'show_user_comment' %}">自分のコメント一覧</a>
                 </li>
                 <li>
