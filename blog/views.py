@@ -74,8 +74,18 @@ class ArticleDetail(DetailView):
     def write_browsing_history(self, reading_article):
         if self.request.user:
             user = self.request.user
-            if user not in reading_article.browsing_user.all():
-                reading_article.browsing_user.add(user)
+            if models.UserArticleRelationship.objects.filter(article=reading_article, user=user):
+                user_article_relationship = models.UserArticleRelationship.objects.get(article=reading_article,
+                                                                                       user=user)
+                user_article_relationship.date = datetime.now()
+                user_article_relationship.save()
+            else:
+                new_user_article_relationship = models.UserArticleRelationship()
+                new_user_article_relationship.article = reading_article
+                new_user_article_relationship.user = user
+                new_user_article_relationship.date = datetime.now()
+                new_user_article_relationship.action = 1
+                new_user_article_relationship.save()
 
     # @method_decorator(login_required)
     def get_recommended_article_list(self):
