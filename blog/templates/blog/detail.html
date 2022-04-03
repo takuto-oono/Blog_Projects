@@ -20,8 +20,7 @@
                 <p id="good-count">{{ article.good_count }}</p>
                 <ul>
                     <li>
-                        <a href="{% url 'do_good_ajax' article.pk %}">いいね</a>
-                        <input type="button" value="いいね" onclick="DoGoodAjax()">
+                        <input name="good-button" type="button" value="いいね" onclick="DoGoodAjax()">
                     </li>
                     <li>
                         <input type="button" value="後で読む" onclick="ReadLaterAjax({{ article.pk }})">
@@ -177,7 +176,15 @@
                 'dataType': 'json',
             })
                 .done(response => {
-                    $('#good-count').html("<p>" + response['good_count'] + "</p>")
+                    $('#good-count').html("<p>" + response['good_count'] + "</p>");
+                    const button = document.querySelector("input[name='good-button']");
+                    if (response['is_good']) {
+                        button.value = '高評価記事から外す';
+                    } else {
+                        button.value = '高評価記事にする';
+                    }
+
+
 
                 });
         }

@@ -245,7 +245,8 @@ def do_good_ajax(request, article_pk):
         user_article_relationship.delete()
         article.good_count -= 1
         response = {
-            'good_count': article.good_count
+            'good_count': article.good_count,
+            'is_good': False,
         }
         article.save()
     else:
@@ -256,7 +257,8 @@ def do_good_ajax(request, article_pk):
         new_user_article_relationship.date = datetime.now()
         article.good_count += 1
         response = {
-            'good_count': article.good_count
+            'good_count': article.good_count,
+            'is_good': True,
         }
         new_user_article_relationship.save()
         article.save()
