@@ -18,7 +18,7 @@
                 {% if is_mode %}
                     {% for article in object_list %}
                     <li>
-                        <img src="{{ article.article__picture.url }}" alt=""/>
+                        <img src="/media/{{ article.article__picture }}" alt="aaaa"/>
                         <div class="link">
                             <a href="{% url 'detail_article' article.article %}">
                                 <p>{{ article.article__title }}</p>

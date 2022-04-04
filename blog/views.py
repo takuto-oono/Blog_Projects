@@ -47,7 +47,7 @@ class ArticleList(ListView):
                 mode = self.kwargs['user_mode']
                 queryset_test = models.Article.objects.all()
                 print(queryset_test)
-                relationships = models.UserArticleRelationship.objects.filter(user=self.request.user,
+                queryset = models.UserArticleRelationship.objects.filter(user=self.request.user,
                                                                               action=mode).values(
                     'article__title',
                     'article__content',
@@ -57,13 +57,15 @@ class ArticleList(ListView):
 
                 )
 
-                print(relationships)
-                for relationship in relationships:
-                    print(relationship)
+                print(queryset)
+                for article in queryset:
+                    print(article['article__picture'])
                     # print(relationship.title)
-                return relationships
+                return queryset
         else:
             queryset = models.Article.objects.filter(is_public=True)
+            for article in queryset:
+                print(article.picture.url)
             return queryset.order_by('-public_date', '-good_count')
 
     def get_recommended_article_list(self):
