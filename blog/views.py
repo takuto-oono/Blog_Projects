@@ -25,6 +25,8 @@ class ArticleList(ListView):
                     is_public=True, category=models.Category.objects.get(pk=self.kwargs['category_pk']))
                 return queryset.order_by('-public_date', '-good_count')
             if 'user_mode' in self.kwargs:
+                if not self.request.user.is_authenticated:
+                    raise Http404("ログインしてください")
                 mode = self.kwargs['user_mode']
                 queryset_test = models.Article.objects.all()
                 print(queryset_test)
@@ -71,13 +73,21 @@ class ArticleList(ListView):
         # return read_later_list
 
     def get_context_data(self, **kwargs):
-        context = super(ArticleList, self).get_context_data(**kwargs)
-        context.update({
-            'category_list': models.Category.objects.filter(is_public=True),
-            'recommended_article_list': self.get_recommended_article_list(),
-            'is_mode': 'user_mode' in self.kwargs
-        })
-        return context
+        if self.request.user.is_authenticated:
+            context = super(ArticleList, self).get_context_data(**kwargs)
+            context.update({
+                'category_list': models.Category.objects.filter(is_public=True),
+                'recommended_article_list': self.get_recommended_article_list(),
+                'is_mode': 'user_mode' in self.kwargs
+            })
+            return context
+        else:
+            context = super(ArticleList, self).get_context_data(**kwargs)
+            context.update({
+                'category_list': models.Category.objects.filter(is_public=True),
+                'is_mode': False,
+            })
+            return context
 
 
 class CategoryDetail(TemplateView):
