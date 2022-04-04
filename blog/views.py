@@ -18,6 +18,23 @@ class ArticleList(ListView):
     model = models.Article
     paginate_by = 10
 
+    def create_title(self, **kwargs):
+        if self.kwargs:
+            if 'category_pk' in self.kwargs:
+                return models.Category.objects.get(pk=self.kwargs['category_pk'])
+
+            if 'user_mode' in self.kwargs:
+                mode = self.kwargs['user_mode']
+                if mode == 1:
+                    title = '閲覧履歴'
+                elif mode == 2:
+                    title = '高評価記事'
+                elif mode == 3:
+                    title = '後で読むリスト'
+                return title
+        else:
+            return 'ホーム'
+
     def get_queryset(self, **kwargs):
         if self.kwargs:
             if 'category_pk' in self.kwargs:
@@ -78,7 +95,8 @@ class ArticleList(ListView):
             context.update({
                 'category_list': models.Category.objects.filter(is_public=True),
                 'recommended_article_list': self.get_recommended_article_list(),
-                'is_mode': 'user_mode' in self.kwargs
+                'is_mode': 'user_mode' in self.kwargs,
+                'title': self.create_title(**kwargs),
             })
             return context
         else:
@@ -86,6 +104,7 @@ class ArticleList(ListView):
             context.update({
                 'category_list': models.Category.objects.filter(is_public=True),
                 'is_mode': False,
+                'title': self.create_title(**kwargs),
             })
             return context
 
