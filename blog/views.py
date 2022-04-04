@@ -27,19 +27,35 @@ class ArticleList(ListView):
             queryset = models.Article.objects.filter(is_public=True)
             return queryset.order_by('-public_date', '-good_count')
 
-    def get_later_article_list(self):
-        read_later_list = []
-        for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
-            if self.request.user in article.read_later_user.all():
-                read_later_list.append(article)
-        return read_later_list
+    def get_recommended_article_list(self):
+        recommended_article_list = []
+        articles = models.Article.objects.filter(
+            is_public=True).order_by('-good_count', '-public_date')
+        read_article_list = []
+        user_article_relationships = models.UserArticleRelationship.objects.filter(user=self.request.user, action=1)
+        cnt = 0
+        for user_article_relationship in user_article_relationships:
+            read_article_list.append(user_article_relationship.article)
+        for article in articles:
+            if article in read_article_list:
+                continue
+            cnt += 1
+            recommended_article_list.append(article)
+            if cnt >= 10:
+                break
+        return recommended_article_list
+
+
+        # for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
+        #     if self.request.user in article.read_later_user.all():
+        #         read_later_list.append(article)
+        # return read_later_list
 
     def get_context_data(self, **kwargs):
         context = super(ArticleList, self).get_context_data(**kwargs)
         context.update({
             'category_list': models.Category.objects.filter(is_public=True),
-            'good_article_list': self.get_good_article_list(),
-            'read_later_list': self.get_later_article_list(),
+            'recommended_article_list': self.get_recommended_article_list(),
         })
         return context
 
@@ -80,23 +96,13 @@ class ArticleDetail(DetailView):
                 new_user_article_relationship.save()
 
     # @method_decorator(login_required)
-    def get_recommended_article_list(self):
-        recommended_article_list = []
-        articles = models.Article.objects.filter(
-            is_public=True).order_by('-good_count', '-public_date')
-        read_article_list = []
-        user_article_relationships = models.UserArticleRelationship.objects.filter(user=self.request.user, action=1)
-        cnt = 0
-        for user_article_relationship in user_article_relationships:
-            read_article_list.append(user_article_relationship.article)
-        for article in articles:
-            if article in read_article_list:
-                continue
-            cnt += 1
-            recommended_article_list.append(article)
-            if cnt >= 10:
-                break
-        return recommended_article_list
+    def get_later_article_list(self):
+        read_later_list = []
+        for user_article_relationship in models.UserArticleRelationship.objects.filter(user=self.request.user,
+                                                                                       action=3).order_by('date'):
+            read_later_list.append(user_article_relationship.article)
+        return read_later_list
+
 
         # for article in articles:
         #     if self.request.user in article.read_later_user.all():
@@ -125,7 +131,7 @@ class ArticleDetail(DetailView):
                 'comments': models.Comment.objects.filter(article=article),
                 'good_cnt': article.good_count,
                 'good_button_value': self.get_is_good(article),
-                'recommend_article_list': self.get_recommended_article_list(),
+                'later_article_list': self.get_later_article_list(),
                 'category_list': models.Category.objects.filter(is_public=True)
             })
         else:

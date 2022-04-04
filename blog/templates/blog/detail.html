@@ -50,8 +50,8 @@
                 {% endfor %}
             </div>
         </div>
-        <div id="recommend_article_list">
-            {% for article in recommend_article_list %}
+        <div id="later-article-list">
+            {% for article in later_article_list %}
                 <li>
                     <img src="{{ article.picture.url }}"/>
                     <a href="{% url 'detail_article' article.pk %}">
