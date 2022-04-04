@@ -22,7 +22,6 @@ class ArticleList(ListView):
         if self.kwargs:
             if 'category_pk' in self.kwargs:
                 return models.Category.objects.get(pk=self.kwargs['category_pk'])
-
             if 'user_mode' in self.kwargs:
                 mode = self.kwargs['user_mode']
                 if mode == 1:
@@ -45,15 +44,15 @@ class ArticleList(ListView):
                 if not self.request.user.is_authenticated:
                     raise Http404("ログインしてください")
                 mode = self.kwargs['user_mode']
-                queryset_test = models.Article.objects.all()
-                print(queryset_test)
-                queryset = models.UserArticleRelationship.objects.filter(user=self.request.user,
-                                                                              action=mode).values(
+                queryset = models.UserArticleRelationship.objects.order_by('-date').filter(
+                    user=self.request.user,
+                    action=mode).values(
                     'article__title',
                     'article__content',
                     'article',
                     'article__picture',
                     'article__public_date',
+                    'date',
 
                 )
 
