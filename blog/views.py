@@ -27,14 +27,6 @@ class ArticleList(ListView):
             queryset = models.Article.objects.filter(is_public=True)
             return queryset.order_by('-public_date', '-good_count')
 
-    def get_good_article_list(self):
-        good_article_list = []
-        for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
-            if self.request.user in article.good_user.all():
-                good_article_list.append(article)
-
-        return good_article_list
-
     def get_later_article_list(self):
         read_later_list = []
         for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
@@ -92,16 +84,30 @@ class ArticleDetail(DetailView):
         recommended_article_list = []
         articles = models.Article.objects.filter(
             is_public=True).order_by('-good_count', '-public_date')
+        read_article_list = []
+        user_article_relationships = models.UserArticleRelationship.objects.filter(user=self.request.user, action=1)
+        cnt = 0
+        for user_article_relationship in user_article_relationships:
+            read_article_list.append(user_article_relationship.article)
         for article in articles:
-            if self.request.user in article.read_later_user.all():
-                recommended_article_list.append(article)
-        for article in articles:
-            if self.request.user not in article.browsing_user.all() and article not in recommended_article_list:
-                recommended_article_list.append(article)
-        for article in articles:
-            if self.request.user in article.browsing_user.all() and article not in recommended_article_list:
-                recommended_article_list.append(article)
+            if article in read_article_list:
+                continue
+            cnt += 1
+            recommended_article_list.append(article)
+            if cnt >= 10:
+                break
         return recommended_article_list
+
+        # for article in articles:
+        #     if self.request.user in article.read_later_user.all():
+        #         recommended_article_list.append(article)
+        # for article in articles:
+        #     if self.request.user not in article.browsing_user.all() and article not in recommended_article_list:
+        #         recommended_article_list.append(article)
+        # for article in articles:
+        #     if self.request.user in article.browsing_user.all() and article not in recommended_article_list:
+        #         recommended_article_list.append(article)
+        # return recommended_article_list
 
     def get_is_good(self, article):
         if models.UserArticleRelationship.objects.filter(user=self.request.user, article=article, action=2).count() > 0:
