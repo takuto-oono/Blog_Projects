@@ -31,13 +31,15 @@ class ArticleList(ListView):
                 elif mode == 2:
                     queryset_test = models.Article.objects.all()
                     print(queryset_test)
-                    relationships = models.UserArticleRelationship.objects.all().values('article__title',
-                                                                                        'article__content',
-                                                                                        'article',
-                                                                                        'article__picture',
-                                                                                        'article__public_date',
+                    relationships = models.UserArticleRelationship.objects.filter(user=self.request.user,
+                                                                                  action=2).values(
+                        'article__title',
+                        'article__content',
+                        'article',
+                        'article__picture',
+                        'article__public_date',
 
-                                                                                        )
+                    )
 
                     print(relationships)
                     for relationship in relationships:
