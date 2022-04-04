@@ -5,6 +5,7 @@ from django.conf import settings
 
 urlpatterns = [
                   path('<int:category_pk>', views.ArticleList.as_view(), name='category'),
+                  path('show_user_detail/<int:user_mode>', views.ArticleList.as_view(), name='show_user_detail'),
                   path('', views.ArticleList.as_view(), name='index'),
                   path('detail/<int:pk>', views.ArticleDetail.as_view(), name='detail_article'),
                   path('get_good_count_ajax/<int:article_pk>',

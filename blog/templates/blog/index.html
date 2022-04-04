@@ -14,18 +14,34 @@
         <div id="article-list">
             <p>記事一覧</p>
             <ul>
-                {% for article in object_list %}
+                {% if is_mode %}
+                    {% for article in object_list %}
                     <li>
-                        <img src="{{ article.picture.url }}" alt=""/>
+                        <img src="{{ article.article__picture.url }}" alt=""/>
                         <div class="link">
-                            <a href="{% url 'detail_article' article.pk %}">
-                                <p>{{ article.title }}</p>
+                            <a href="{% url 'detail_article' article.article %}">
+                                <p>{{ article.article__title }}</p>
                             </a>
-                            <input type="button" value="後で読む" onclick="ReadLaterAjax({{ article.pk }})">
+                            <input type="button" value="後で読む" onclick="ReadLaterAjax({{ article.article }})">
                         </div>
-                        <p class="date">{{ article.public_date }}</p>
+                        <p class="date">{{ article.article__public_date }}</p>
                     </li>
-                {% endfor %}
+                    {% endfor %}
+
+                {% else %}
+                    {% for article in object_list %}
+                        <li>
+                            <img src="{{ article.picture.url }}" alt=""/>
+                            <div class="link">
+                                <a href="{% url 'detail_article' article.pk %}">
+                                    <p>{{ article.title }}</p>
+                                </a>
+                                <input type="button" value="後で読む" onclick="ReadLaterAjax({{ article.pk }})">
+                            </div>
+                            <p class="date">{{ article.public_date }}</p>
+                        </li>
+                    {% endfor %}
+                {% endif %}
             </ul>
             <div class="pagination">
 			<span class="step-links">

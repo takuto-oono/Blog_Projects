@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 from . import models
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -20,9 +20,35 @@ class ArticleList(ListView):
 
     def get_queryset(self, **kwargs):
         if self.kwargs:
-            queryset = models.Article.objects.filter(
-                is_public=True, category=models.Category.objects.get(pk=self.kwargs['category_pk']))
-            return queryset.order_by('-public_date', '-good_count')
+            if 'category_pk' in self.kwargs:
+                queryset = models.Article.objects.filter(
+                    is_public=True, category=models.Category.objects.get(pk=self.kwargs['category_pk']))
+                return queryset.order_by('-public_date', '-good_count')
+            if 'user_mode' in self.kwargs:
+                mode = self.kwargs['user_mode']
+                if mode == 1:
+                    pass
+                elif mode == 2:
+                    queryset_test = models.Article.objects.all()
+                    print(queryset_test)
+                    relationships = models.UserArticleRelationship.objects.filter(user=self.request.user,
+                                                                                  action=2).values(
+                        'article__title',
+                        'article__content',
+                        'article',
+                        'article__picture',
+                        'article__public_date',
+
+                    )
+
+                    print(relationships)
+                    for relationship in relationships:
+                        print(relationship)
+                        # print(relationship.title)
+                    return relationships
+
+                elif mode == 3:
+                    pass
         else:
             queryset = models.Article.objects.filter(is_public=True)
             return queryset.order_by('-public_date', '-good_count')
@@ -45,7 +71,6 @@ class ArticleList(ListView):
                 break
         return recommended_article_list
 
-
         # for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
         #     if self.request.user in article.read_later_user.all():
         #         read_later_list.append(article)
@@ -56,6 +81,7 @@ class ArticleList(ListView):
         context.update({
             'category_list': models.Category.objects.filter(is_public=True),
             'recommended_article_list': self.get_recommended_article_list(),
+            'is_mode': 'user_mode' in self.kwargs
         })
         return context
 
@@ -102,7 +128,6 @@ class ArticleDetail(DetailView):
                                                                                        action=3).order_by('date'):
             read_later_list.append(user_article_relationship.article)
         return read_later_list
-
 
         # for article in articles:
         #     if self.request.user in article.read_later_user.all():
