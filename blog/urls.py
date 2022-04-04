@@ -17,7 +17,6 @@ urlpatterns = [
                   # path('delete/comment/<int:pk>/<int:article_pk>',
                   # views.DeleteComment.as_view(), name='delete_comment'),
                   path('delete_comment_Ajax', views.delete_comment_ajax, name='delete_comment_Ajax'),
-                  path('show_browsing_history', views.ShowBrowsingHistory.as_view(), name='show_browsing_history'),
                   path('show_user_comment', views.ShowUserComment.as_view(), name='show_user_comment'),
                   path('do_good_ajax/<int:article_pk>', views.do_good_ajax, name='do_good_ajax'),
                   path('read_later_ajax', views.read_later_ajax, name='read_later_ajax'),
