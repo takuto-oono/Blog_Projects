@@ -45,10 +45,10 @@
 			</span>
             </div>
         </div>
-        <div id="read-later-list">
-            <p>後で読むリスト</p>
+        <div id="recommend-article-list">
+            <p>おすすめリスト</p>
             <ul>
-                {% for article in read_later_list %}
+                {% for article in recommended_article_list %}
                     <li>
                         <img src="{{ article.picture.url }}" alt=""/>
                         <a href="{% url 'detail_article' article.pk %}">
