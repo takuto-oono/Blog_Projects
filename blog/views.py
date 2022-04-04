@@ -26,29 +26,23 @@ class ArticleList(ListView):
                 return queryset.order_by('-public_date', '-good_count')
             if 'user_mode' in self.kwargs:
                 mode = self.kwargs['user_mode']
-                if mode == 1:
-                    pass
-                elif mode == 2:
-                    queryset_test = models.Article.objects.all()
-                    print(queryset_test)
-                    relationships = models.UserArticleRelationship.objects.filter(user=self.request.user,
-                                                                                  action=2).values(
-                        'article__title',
-                        'article__content',
-                        'article',
-                        'article__picture',
-                        'article__public_date',
+                queryset_test = models.Article.objects.all()
+                print(queryset_test)
+                relationships = models.UserArticleRelationship.objects.filter(user=self.request.user,
+                                                                              action=mode).values(
+                    'article__title',
+                    'article__content',
+                    'article',
+                    'article__picture',
+                    'article__public_date',
 
-                    )
+                )
 
-                    print(relationships)
-                    for relationship in relationships:
-                        print(relationship)
-                        # print(relationship.title)
-                    return relationships
-
-                elif mode == 3:
-                    pass
+                print(relationships)
+                for relationship in relationships:
+                    print(relationship)
+                    # print(relationship.title)
+                return relationships
         else:
             queryset = models.Article.objects.filter(is_public=True)
             return queryset.order_by('-public_date', '-good_count')
