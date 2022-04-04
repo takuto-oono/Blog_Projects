@@ -61,7 +61,7 @@ class UserArticleRelationship(models.Model):
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, verbose_name='ユーザー')
     article = models.ForeignKey(
-        Article, on_delete=models.CASCADE, verbose_name='記事')
+        Article, on_delete=models.CASCADE, verbose_name='記事', related_name='article_related')
     date = models.DateField(verbose_name='活動日', default=datetime.now)
     action = models.IntegerField(default=0, verbose_name='活動内容')
 
