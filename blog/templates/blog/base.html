@@ -103,6 +103,19 @@
 
 </script>
 <script>
+    function ExchangeButtonValue(readLaterList, divId) {
+        const liList = document.querySelector(divId).querySelector('ul').querySelectorAll('li')
+        for (let i = 0; i < liList.length; i++) {
+            for (let j = 0; j < readLaterList.length; j++) {
+                if (liList[i].id === readLaterList[j].toString()) {
+                    liList[i].querySelector("input[name='read-later-button']").value = '後で読むリストに追加済み'
+
+                    break;
+                }
+            }
+        }
+
+    }
     function GetAllReadLaterAjax() {
         $.ajax({
             'type': 'GET',
@@ -112,17 +125,9 @@
         })
             .done(response => {
                 if (response['is_authenticated']) {
-                    const liList = document.querySelector('#article-list').querySelector('ul').querySelectorAll('li')
                     const readLaterList = response['read_later_list']
-                    for (let i = 0; i < liList.length; i++) {
-                        for (let j = 0; j < readLaterList.length; j++) {
-                            if (liList[i].id === readLaterList[j].toString()) {
-                                liList[i].querySelector("input[name='read-later-button']").value = '後で読むリストに追加済み'
-
-                                break;
-                            }
-                        }
-                    }
+                    ExchangeButtonValue(readLaterList, '#article-list')
+                    ExchangeButtonValue(readLaterList, '#recommend-article-list')
                 }
             })
     }
