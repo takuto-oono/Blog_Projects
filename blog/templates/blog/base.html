@@ -95,6 +95,9 @@
         })
             .done(response => {
                 console.log(response['read_later'])
+                if (response['is_redirect']) {
+                    location.href = '/account/login'
+                }
             });
     }
 

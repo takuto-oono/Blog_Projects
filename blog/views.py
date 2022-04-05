@@ -371,15 +371,22 @@ def do_good_ajax(request, article_pk):
     return JsonResponse(response)
 
 
-@login_required
+# @login_required
 def read_later_ajax(request):
     article = models.Article.objects.get(pk=request.POST.get('article_pk'))
+    if not request.user.is_authenticated:
+        response = {
+            'read_later': False,
+            'is_redirect': True,
+        }
+        return JsonResponse(response)
     user = request.user
     if models.UserArticleRelationship.objects.filter(article=article, user=user, action=3):
         user_article_relationship = models.UserArticleRelationship.objects.get(article=article, user=user, action=3)
         user_article_relationship.delete()
         response = {
             'read_later': False,
+            'is_redirect': False,
         }
     else:
         new_user_article_relationship = models.UserArticleRelationship()
@@ -390,6 +397,7 @@ def read_later_ajax(request):
         new_user_article_relationship.save()
         response = {
             'read_later': True,
+            'is_redirect': False,
         }
 
     return JsonResponse(response)
