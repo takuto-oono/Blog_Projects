@@ -182,6 +182,8 @@ class ArticleDetail(DetailView):
         # return recommended_article_list
 
     def get_is_good(self, article):
+        if not self.request.user.is_authenticated:
+            return '高評価する'
         if models.UserArticleRelationship.objects.filter(user=self.request.user, article=article, action=2).count() > 0:
             return '高評価を外す'
         else:
@@ -204,7 +206,7 @@ class ArticleDetail(DetailView):
             context.update({
                 'comments': models.Comment.objects.filter(article=article),
                 'good_cnt': article.good_count,
-                'good_button_value': '高評価を外す',
+                'good_button_value': '高評価する',
 
             })
 
