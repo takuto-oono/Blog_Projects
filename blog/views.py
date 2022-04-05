@@ -16,7 +16,7 @@ from datetime import datetime
 class ArticleList(ListView):
     template_name = 'blog/index.html'
     model = models.Article
-    paginate_by = 10
+    paginate_by = 12
 
     def create_title(self, **kwargs):
         if self.kwargs:
@@ -418,4 +418,23 @@ def read_later_ajax(request):
             'is_redirect': False,
         }
 
+    return JsonResponse(response)
+
+
+def get_all_is_read_later(request):
+    if not request.user.is_authenticated:
+        response = {
+            'is_authenticated': False
+        }
+        return JsonResponse(response)
+    read_later_list = []
+    for user_article_relationship in models.UserArticleRelationship.objects.filter(user=request.user, action=3):
+        read_later_list.append(user_article_relationship.article.pk)
+    # print('--------------------------')
+    # print(read_later_list)
+    # print('--------------------------')
+    response = {
+        'is_authenticated': True,
+        'read_later_list': read_later_list,
+    }
     return JsonResponse(response)

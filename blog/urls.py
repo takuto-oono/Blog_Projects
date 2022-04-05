@@ -20,4 +20,5 @@ urlpatterns = [
                   path('show_user_comment', views.ShowUserComment.as_view(), name='show_user_comment'),
                   path('do_good_ajax/<int:article_pk>', views.do_good_ajax, name='do_good_ajax'),
                   path('read_later_ajax', views.read_later_ajax, name='read_later_ajax'),
+                  path('get_all_is_read_later', views.get_all_is_read_later, name='get_all_is_read_later'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

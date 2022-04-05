@@ -102,6 +102,35 @@
     }
 
 </script>
+<script>
+    function GetAllReadLaterAjax() {
+        $.ajax({
+            'type': 'GET',
+            'url': "{% url 'get_all_is_read_later' %}",
+            'data': {},
+            'dataType': 'json',
+        })
+            .done(response => {
+                if (response['is_authenticated']) {
+                    const liList = document.querySelector('#article-list').querySelector('ul').querySelectorAll('li')
+                    const readLaterList = response['read_later_list']
+                    for (let i = 0; i < liList.length; i++) {
+                        for (let j = 0; j < readLaterList.length; j++) {
+                            if (liList[i].id === readLaterList[j].toString()) {
+                                liList[i].querySelector("input[name='read-later-button']").value = '後で読むリストに追加済み'
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            })
+    }
+
+    window.onload = GetAllReadLaterAjax;
+
+
+</script>
 
 
 </body>
