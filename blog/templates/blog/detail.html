@@ -184,6 +184,10 @@
                         button.value = '高評価する';
                     }
 
+                    if (response['is_redirect']) {
+                        location.href = '/account/login'
+                    }
+
 
 
                 });

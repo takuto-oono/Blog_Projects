@@ -332,9 +332,16 @@ def delete_comment_ajax(request):
     return JsonResponse(response)
 
 
-@login_required
+# @login_required
 def do_good_ajax(request, article_pk):
     article = models.Article.objects.get(pk=article_pk)
+    if not request.user.is_authenticated:
+        response = {
+            'good_count': article.good_count,
+            'is_good': False,
+            'is_redirect': True
+        }
+        return JsonResponse(response)
     user = request.user
     if models.UserArticleRelationship.objects.filter(user=user, article=article, action=2).count() == 1:
         user_article_relationship = models.UserArticleRelationship.objects.get(user=user, article=article, action=2)
@@ -343,6 +350,7 @@ def do_good_ajax(request, article_pk):
         response = {
             'good_count': article.good_count,
             'is_good': False,
+            'is_redirect': False
         }
         article.save()
     else:
@@ -355,6 +363,7 @@ def do_good_ajax(request, article_pk):
         response = {
             'good_count': article.good_count,
             'is_good': True,
+            'is_redirect': False
         }
         new_user_article_relationship.save()
         article.save()
