@@ -207,6 +207,7 @@ class ArticleDetail(DetailView):
                 'comments': models.Comment.objects.filter(article=article),
                 'good_cnt': article.good_count,
                 'good_button_value': '高評価する',
+                'category_list': models.Category.objects.filter(is_public=True),
 
             })
 
