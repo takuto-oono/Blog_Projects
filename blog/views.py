@@ -165,10 +165,21 @@ class ArticleDetail(DetailView):
     # @method_decorator(login_required)
     def get_later_article_list(self):
         read_later_list = []
-        for user_article_relationship in models.UserArticleRelationship.objects.filter(user=self.request.user,
-                                                                                       action=3).order_by('date'):
-            read_later_list.append(user_article_relationship.article)
-        return read_later_list
+        if self.request.user.is_authenticated:
+            for user_article_relationship in models.UserArticleRelationship.objects.filter(user=self.request.user,
+                                                                                           action=3).order_by('date'):
+                read_later_list.append(user_article_relationship.article)
+            return read_later_list
+        else:
+            articles = models.Article.objects.filter(
+                is_public=True).order_by('-good_count', '-public_date')
+            cnt = 0
+            for article in articles:
+                read_later_list.append(article)
+                cnt += 1
+                if cnt == 10:
+                    break
+            return read_later_list
 
         # for article in articles:
         #     if self.request.user in article.read_later_user.all():
@@ -180,6 +191,11 @@ class ArticleDetail(DetailView):
         #     if self.request.user in article.browsing_user.all() and article not in recommended_article_list:
         #         recommended_article_list.append(article)
         # return recommended_article_list
+
+        # for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
+        #     if self.request.user in article.read_later_user.all():
+        #         read_later_list.append(article)
+        # return read_later_list
 
     def get_is_good(self, article):
         if not self.request.user.is_authenticated:
@@ -200,13 +216,14 @@ class ArticleDetail(DetailView):
                 'good_cnt': article.good_count,
                 'good_button_value': self.get_is_good(article),
                 'later_article_list': self.get_later_article_list(),
-                'category_list': models.Category.objects.filter(is_public=True)
+                'category_list': models.Category.objects.filter(is_public=True),
             })
         else:
             context.update({
                 'comments': models.Comment.objects.filter(article=article),
                 'good_cnt': article.good_count,
                 'good_button_value': '高評価する',
+                'later_article_list': self.get_later_article_list(),
                 'category_list': models.Category.objects.filter(is_public=True),
 
             })
