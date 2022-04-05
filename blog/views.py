@@ -42,7 +42,7 @@ class ArticleList(ListView):
                 return queryset.order_by('-public_date', '-good_count')
             if 'user_mode' in self.kwargs:
                 if not self.request.user.is_authenticated:
-                    raise Http404("ログインしてください")
+                    raise Http404("この機能はログインをしないと使えません。")
                 mode = self.kwargs['user_mode']
                 queryset = models.UserArticleRelationship.objects.order_by('-date').filter(
                     user=self.request.user,
@@ -72,19 +72,27 @@ class ArticleList(ListView):
         articles = models.Article.objects.filter(
             is_public=True).order_by('-good_count', '-public_date')
         read_article_list = []
-        user_article_relationships = models.UserArticleRelationship.objects.filter(user=self.request.user, action=1)
-        cnt = 0
-        for user_article_relationship in user_article_relationships:
-            read_article_list.append(user_article_relationship.article)
-        for article in articles:
-            if article in read_article_list:
-                continue
-            cnt += 1
-            recommended_article_list.append(article)
-            if cnt >= 10:
-                break
-        return recommended_article_list
-
+        if self.request.user.is_authenticated:
+            user_article_relationships = models.UserArticleRelationship.objects.filter(user=self.request.user, action=1)
+            cnt = 0
+            for user_article_relationship in user_article_relationships:
+                read_article_list.append(user_article_relationship.article)
+            for article in articles:
+                if article in read_article_list:
+                    continue
+                cnt += 1
+                recommended_article_list.append(article)
+                if cnt >= 10:
+                    break
+            return recommended_article_list
+        else:
+            cnt = 0
+            for article in articles:
+                recommended_article_list.append(article)
+                cnt += 1
+                if cnt == 10:
+                    break
+            return recommended_article_list
         # for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
         #     if self.request.user in article.read_later_user.all():
         #         read_later_list.append(article)
@@ -99,14 +107,23 @@ class ArticleList(ListView):
                 'is_mode': 'user_mode' in self.kwargs,
                 'title': self.create_title(**kwargs),
             })
+            print(context)
             return context
         else:
             context = super(ArticleList, self).get_context_data(**kwargs)
             context.update({
                 'category_list': models.Category.objects.filter(is_public=True),
+                'recommended_article_list': self.get_recommended_article_list(),
                 'is_mode': False,
                 'title': self.create_title(**kwargs),
             })
+            # context = {
+            #     'category_list': models.Category.objects.filter(is_public=True),
+            #     'recommended_article_list': self.get_recommended_article_list(),
+            #     'is_mode': False,
+            #     'title': self.create_title(**kwargs),
+            # }
+            print(context)
             return context
 
 
@@ -148,10 +165,21 @@ class ArticleDetail(DetailView):
     # @method_decorator(login_required)
     def get_later_article_list(self):
         read_later_list = []
-        for user_article_relationship in models.UserArticleRelationship.objects.filter(user=self.request.user,
-                                                                                       action=3).order_by('date'):
-            read_later_list.append(user_article_relationship.article)
-        return read_later_list
+        if self.request.user.is_authenticated:
+            for user_article_relationship in models.UserArticleRelationship.objects.filter(user=self.request.user,
+                                                                                           action=3).order_by('date'):
+                read_later_list.append(user_article_relationship.article)
+            return read_later_list
+        else:
+            articles = models.Article.objects.filter(
+                is_public=True).order_by('-good_count', '-public_date')
+            cnt = 0
+            for article in articles:
+                read_later_list.append(article)
+                cnt += 1
+                if cnt == 10:
+                    break
+            return read_later_list
 
         # for article in articles:
         #     if self.request.user in article.read_later_user.all():
@@ -164,7 +192,14 @@ class ArticleDetail(DetailView):
         #         recommended_article_list.append(article)
         # return recommended_article_list
 
+        # for article in models.Article.objects.filter(is_public=True).order_by('-public_date', '-good_count'):
+        #     if self.request.user in article.read_later_user.all():
+        #         read_later_list.append(article)
+        # return read_later_list
+
     def get_is_good(self, article):
+        if not self.request.user.is_authenticated:
+            return '高評価する'
         if models.UserArticleRelationship.objects.filter(user=self.request.user, article=article, action=2).count() > 0:
             return '高評価を外す'
         else:
@@ -181,13 +216,15 @@ class ArticleDetail(DetailView):
                 'good_cnt': article.good_count,
                 'good_button_value': self.get_is_good(article),
                 'later_article_list': self.get_later_article_list(),
-                'category_list': models.Category.objects.filter(is_public=True)
+                'category_list': models.Category.objects.filter(is_public=True),
             })
         else:
             context.update({
                 'comments': models.Comment.objects.filter(article=article),
                 'good_cnt': article.good_count,
-                'good_button_value': '高評価を外す',
+                'good_button_value': '高評価する',
+                'later_article_list': self.get_later_article_list(),
+                'category_list': models.Category.objects.filter(is_public=True),
 
             })
 
@@ -202,7 +239,9 @@ def get_good_count_ajax(request, article_pk):
     return JsonResponse({'good_count': good_count})
 
 
-class ShowBrowsingHistory(ListView, LoginRequiredMixin):
+class ShowBrowsingHistory(LoginRequiredMixin, ListView):
+    login_url = '/account/login'
+    REDIRECT_FIELD_NAME = 'next'
     template_name = 'blog/show_browsing_history.html'
     model = models.UserArticleRelationship
     paginate_by = 10
@@ -212,7 +251,9 @@ class ShowBrowsingHistory(ListView, LoginRequiredMixin):
         return queryset
 
 
-class ShowUserComment(ListView, LoginRequiredMixin):
+class ShowUserComment(LoginRequiredMixin, ListView):
+    login_url = '/account/login'
+    REDIRECT_FIELD_NAME = 'next'
     template_name = 'blog/show_comment.html'
     model = models.Comment
 
@@ -221,7 +262,9 @@ class ShowUserComment(ListView, LoginRequiredMixin):
         return queryset
 
 
-class CreateCommentView(CreateView, LoginRequiredMixin):
+class CreateCommentView(LoginRequiredMixin, CreateView):
+    login_url = '/account/login'
+    REDIRECT_FIELD_NAME = 'next'
     template_name = 'blog/create_comment.html'
     model = models.Comment
     fields = ['content']
@@ -245,7 +288,9 @@ class CreateCommentView(CreateView, LoginRequiredMixin):
         return super().form_valid(form)
 
 
-class EditComment(UpdateView, LoginRequiredMixin):
+class EditComment(LoginRequiredMixin, UpdateView):
+    login_url = '/account/login'
+    REDIRECT_FIELD_NAME = 'next'
     template_name = 'blog/edit_comment.html'
     model = models.Comment
     fields = ['content']
@@ -305,9 +350,16 @@ def delete_comment_ajax(request):
     return JsonResponse(response)
 
 
-@login_required
+# @login_required
 def do_good_ajax(request, article_pk):
     article = models.Article.objects.get(pk=article_pk)
+    if not request.user.is_authenticated:
+        response = {
+            'good_count': article.good_count,
+            'is_good': False,
+            'is_redirect': True
+        }
+        return JsonResponse(response)
     user = request.user
     if models.UserArticleRelationship.objects.filter(user=user, article=article, action=2).count() == 1:
         user_article_relationship = models.UserArticleRelationship.objects.get(user=user, article=article, action=2)
@@ -316,6 +368,7 @@ def do_good_ajax(request, article_pk):
         response = {
             'good_count': article.good_count,
             'is_good': False,
+            'is_redirect': False
         }
         article.save()
     else:
@@ -328,6 +381,7 @@ def do_good_ajax(request, article_pk):
         response = {
             'good_count': article.good_count,
             'is_good': True,
+            'is_redirect': False
         }
         new_user_article_relationship.save()
         article.save()
@@ -335,15 +389,22 @@ def do_good_ajax(request, article_pk):
     return JsonResponse(response)
 
 
-@login_required
+# @login_required
 def read_later_ajax(request):
     article = models.Article.objects.get(pk=request.POST.get('article_pk'))
+    if not request.user.is_authenticated:
+        response = {
+            'read_later': False,
+            'is_redirect': True,
+        }
+        return JsonResponse(response)
     user = request.user
     if models.UserArticleRelationship.objects.filter(article=article, user=user, action=3):
         user_article_relationship = models.UserArticleRelationship.objects.get(article=article, user=user, action=3)
         user_article_relationship.delete()
         response = {
             'read_later': False,
+            'is_redirect': False,
         }
     else:
         new_user_article_relationship = models.UserArticleRelationship()
@@ -354,6 +415,7 @@ def read_later_ajax(request):
         new_user_article_relationship.save()
         response = {
             'read_later': True,
+            'is_redirect': False,
         }
 
     return JsonResponse(response)
