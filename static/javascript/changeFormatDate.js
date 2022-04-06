@@ -38,7 +38,7 @@ function CreateHTML(dif, date, text) {
     } else if (dif === 3) {
         showDate = '3日前';
     } else {
-        showDate = date.getFullYear() + '/' + date.getMonth() + 1 + '/' + date.getDate();
+        showDate = date.getFullYear() + '/' + Number(date.getMonth() + 1) + '/' + date.getDate();
     }
 
     return text + ': ' + showDate;
