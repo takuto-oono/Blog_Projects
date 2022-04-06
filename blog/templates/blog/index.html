@@ -17,17 +17,18 @@
             <ul>
                 {% if is_mode %}
                     {% for article in object_list %}
-                    <li id="{{ article.article }}">
-                        <img src="/media/{{ article.article__picture }}" alt="aaaa"/>
-                        <div class="link">
-                            <a href="{% url 'detail_article' article.article %}">
-                                <p>{{ article.article__title }}</p>
-                            </a>
-                            <input name="read-later-button" type="button" value="後で読む" onclick="ReadLaterAjax({{ article.article }})">
-                        </div>
-                        <p class="date">{{ article.article__public_date }}</p>
-                    {{ article.date }}
-                    </li>
+                        <li id="{{ article.article }}">
+                            <img src="/media/{{ article.article__picture }}" alt="aaaa"/>
+                            <div class="link">
+                                <a href="{% url 'detail_article' article.article %}">
+                                    <p>{{ article.article__title }}</p>
+                                </a>
+                                <input name="read-later-button" type="button" value="後で読む"
+                                       onclick="ReadLaterAjax({{ article.article }})">
+                            </div>
+                            <p class="date">{{ article.article__public_date }}</p>
+                            <p class="date">{{ article.date }}</p>
+                        </li>
                     {% endfor %}
 
                 {% else %}
@@ -38,7 +39,8 @@
                                 <a href="{% url 'detail_article' article.pk %}">
                                     <p>{{ article.title }}</p>
                                 </a>
-                                <input name="read-later-button" type="button" value="後で読む" onclick="ReadLaterAjax({{ article.pk }})">
+                                <input name="read-later-button" type="button" value="後で読む"
+                                       onclick="ReadLaterAjax({{ article.pk }})">
                             </div>
                             <p class="date">{{ article.public_date }}</p>
                         </li>
@@ -72,7 +74,8 @@
                         <a href="{% url 'detail_article' article.pk %}">
                             <p>{{ article.title }}</p>
                         </a>
-                        <input name="read-later-button" type="button" value="後で読む" onclick="ReadLaterAjax({{ article.pk }})">
+                        <input name="read-later-button" type="button" value="後で読む"
+                               onclick="ReadLaterAjax({{ article.pk }})">
                     </li>
                 {% endfor %}
             </ul>

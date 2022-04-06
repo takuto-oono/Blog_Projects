@@ -16,6 +16,7 @@ function exchangeToDate(dateString) {
     }
     const day = dateString.slice(index + 2, nextIndex);
     const year = dateString.slice(nextIndex + 2,);
+    console.log(year, month, day);
     return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
 }
 
@@ -44,6 +45,7 @@ function CreateHTML(dif, date) {
 }
 
 function ChangeFormatDate() {
+    console.log('change date')
     const elements = document.getElementsByClassName('date');
     const nowDate = new Date();
     for (let i = 0; i < elements.length; i++) {
@@ -52,4 +54,4 @@ function ChangeFormatDate() {
     }
 }
 
-window.onload = ChangeFormatDate
+addEventListener('load', ChangeFormatDate);
