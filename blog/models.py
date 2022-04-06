@@ -42,13 +42,7 @@ class Article(models.Model):
     public_date = models.DateField(verbose_name='更新日', default=datetime.now)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, verbose_name='カテゴリー', null=True, blank=True)
-    good_user = models.ManyToManyField(
-        get_user_model(), blank=True, verbose_name='高評価ユーザー', related_name='good_user')
     good_count = models.IntegerField(default=0, verbose_name='いいねの数')
-    read_later_user = models.ManyToManyField(get_user_model(), blank=True, verbose_name='後で読むユーザー',
-                                             related_name='later_user')
-    browsing_user = models.ManyToManyField(get_user_model(), blank=True, related_name='browsing_user',
-                                           verbose_name='閲覧したユーザー')
 
     def __str__(self):
         return self.title
