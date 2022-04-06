@@ -88,23 +88,24 @@
             </ul>
         </div>
     </div>
-    <script>
-        {#function ExchangeCategoryTitleFromId() {#}
-        {#    console.log('Exchange category Title')#}
-        {#    $.ajax({#}
-        {#        'type': 'GET',#}
-        {#        'url': "{% url 'get_category_title_ajax' %}",#}
-        {#        'data': {#}
-        {#            'category_pk': document.getElementsByClassName('change-category-title')[0].innerHTML,#}
-        {#        },#}
-        {#        'dataType': 'json',#}
-        {#    })#}
-        {#        .done(response => {#}
-        {#            console.log(response)#}
-        {#            console.log(response['category_title'])#}
-        {#            document.getElementsByClassName('change-category-title')[0].innerHTML = response['category_title']#}
-        {#        })#}
-        
-    </script>
+{#    <scrVipt>#}
+{#        function ExchangeCategoryTitleFromId() {#}
+{#            console.log('Exchange category Title')#}
+{#            $.ajax({#}
+{#                'type': 'GET',#}
+{#                'url': "{% url 'get_category_title_ajax' %}",#}
+{#                'data': {#}
+{#                    'category_pk': document.getElementsByClassName('change-category-title')[0].innerHTML,#}
+{#                },#}
+{#                'dataType': 'json',#}
+{#            })#}
+{#                .done(response => {#}
+{#                    console.log(response)#}
+{#                    console.log(response['category_title'])#}
+{#                    document.getElementsByClassName('change-category-title')[0].innerHTML = response['category_title']#}
+{#                })#}
+{#        }#}
+{##}
+{#    </script>#}
 
 {% endblock %}
