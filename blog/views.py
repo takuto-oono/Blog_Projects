@@ -98,13 +98,18 @@ class ArticleList(ListView):
         #         read_later_list.append(article)
         # return read_later_list
 
+    def create_is_mode(self, **kwargs):
+        if 'user_mode' in self.kwargs:
+            return self.kwargs['user_mode']
+        return 0
+
     def get_context_data(self, **kwargs):
         if self.request.user.is_authenticated:
             context = super(ArticleList, self).get_context_data(**kwargs)
             context.update({
                 'category_list': models.Category.objects.filter(is_public=True),
                 'recommended_article_list': self.get_recommended_article_list(),
-                'is_mode': 'user_mode' in self.kwargs,
+                'is_mode': self.create_is_mode(**kwargs),
                 'title': self.create_title(**kwargs),
             })
             print(context)
@@ -114,7 +119,7 @@ class ArticleList(ListView):
             context.update({
                 'category_list': models.Category.objects.filter(is_public=True),
                 'recommended_article_list': self.get_recommended_article_list(),
-                'is_mode': False,
+                'is_mode': 0,
                 'title': self.create_title(**kwargs),
             })
             # context = {

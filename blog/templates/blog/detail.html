@@ -18,6 +18,8 @@
                 <a class="right" href="{% url 'category' article.category.pk %}">{{ article.category.title }}</a>
                 <p class="right">いいね</p>
                 <p id="good-count">{{ article.good_count }}</p>
+                <p>投稿日</p>
+                <p class="date-public-article">{{ article.public_date }}</p>
                 <ul>
                     <li>
                         <input name="good-button" type="button" value={{ good_button_value }} onclick="DoGoodAjax()">
@@ -38,7 +40,7 @@
                 {% for comment in comments %}
                     <li id="{{ comment.pk }}">
                         <p>{{ comment.content }}</p>
-                        <p class="date">{{ comment.date }}</p>
+                        <p class="date-comment">{{ comment.date }}</p>
                         {% if user == comment.user %}
                             <a href="{% url 'edit_comment' comment.pk article.pk %}">編集</a>
                             {#                        <a href="{% url 'delete_comment' comment.pk article.pk %}">削除</a>#}
