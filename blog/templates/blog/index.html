@@ -28,6 +28,10 @@
                             </div>
                             <p class="date-public-article">{{ article.article__public_date }}</p>
                             <p class="date-{{ is_mode }}">{{ article.date }}</p>
+                            {% if article.article__category %}
+                                <p class="change-category-title">{{ article.article__category }}</p>
+                            {% endif %}
+
                         </li>
                     {% endfor %}
 
@@ -43,6 +47,9 @@
                                        onclick="ReadLaterAjax({{ article.pk }})">
                             </div>
                             <p class="date-public-article">{{ article.public_date }}</p>
+                            {% if article.category %}
+                                <p>{{ article.category }}</p>
+                            {% endif %}
                         </li>
                     {% endfor %}
                 {% endif %}
@@ -81,5 +88,23 @@
             </ul>
         </div>
     </div>
+    <script>
+        {#function ExchangeCategoryTitleFromId() {#}
+        {#    console.log('Exchange category Title')#}
+        {#    $.ajax({#}
+        {#        'type': 'GET',#}
+        {#        'url': "{% url 'get_category_title_ajax' %}",#}
+        {#        'data': {#}
+        {#            'category_pk': document.getElementsByClassName('change-category-title')[0].innerHTML,#}
+        {#        },#}
+        {#        'dataType': 'json',#}
+        {#    })#}
+        {#        .done(response => {#}
+        {#            console.log(response)#}
+        {#            console.log(response['category_title'])#}
+        {#            document.getElementsByClassName('change-category-title')[0].innerHTML = response['category_title']#}
+        {#        })#}
+        
+    </script>
 
 {% endblock %}

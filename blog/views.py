@@ -53,18 +53,13 @@ class ArticleList(ListView):
                     'article__picture',
                     'article__public_date',
                     'date',
+                    'article__category',
 
                 )
 
-                print(queryset)
-                for article in queryset:
-                    print(article['article__picture'])
-                    # print(relationship.title)
                 return queryset
         else:
             queryset = models.Article.objects.filter(is_public=True)
-            for article in queryset:
-                print(article.picture.url)
             return queryset.order_by('-public_date', '-good_count')
 
     def get_recommended_article_list(self):
@@ -112,7 +107,6 @@ class ArticleList(ListView):
                 'is_mode': self.create_is_mode(**kwargs),
                 'title': self.create_title(**kwargs),
             })
-            print(context)
             return context
         else:
             context = super(ArticleList, self).get_context_data(**kwargs)
@@ -128,7 +122,6 @@ class ArticleList(ListView):
             #     'is_mode': False,
             #     'title': self.create_title(**kwargs),
             # }
-            print(context)
             return context
 
 
@@ -142,7 +135,6 @@ class CategoryDetail(TemplateView):
         context.update({
             'article_list': models.Article.objects.filter(is_public=True, category=category)
         })
-        print(context)
         return context
 
 
@@ -341,7 +333,6 @@ class EditComment(LoginRequiredMixin, UpdateView):
 @login_required
 def delete_comment_ajax(request):
     comment_pk = request.POST.get('comment_pk')
-    print(comment_pk)
     comment = models.Comment.objects.get(pk=comment_pk)
     if comment.user == request.user:
         comment.delete()
@@ -435,11 +426,26 @@ def get_all_is_read_later(request):
     read_later_list = []
     for user_article_relationship in models.UserArticleRelationship.objects.filter(user=request.user, action=3):
         read_later_list.append(user_article_relationship.article.pk)
-    # print('--------------------------')
-    # print(read_later_list)
-    # print('--------------------------')
     response = {
         'is_authenticated': True,
         'read_later_list': read_later_list,
     }
     return JsonResponse(response)
+
+
+def get_category_title_ajax(request):
+    category_pk = request.GET.get('category_pk')
+    print('cagegory_pk:' + str(category_pk))
+    if models.Category.objects.filter(pk=category_pk):
+        print(models.Category.objects.get(pk=category_pk).title)
+        response = {
+            # 'category-title': str(models.Category.objects.get(pk=category_pk).title),
+            'category-title': 'aaaaaaaaaaa'
+        }
+        return JsonResponse(response)
+
+    else:
+        response = {
+            'category-title': '',
+        }
+        return JsonResponse(response)

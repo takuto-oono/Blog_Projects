@@ -40,12 +40,10 @@ function CreateHTML(dif, date, text) {
     } else {
         showDate = date.getFullYear() + '/' + Number(date.getMonth() + 1) + '/' + date.getDate();
     }
-
     return text + ': ' + showDate;
 }
 
 function ChangeFormatDate() {
-    console.log('change date')
     const textDic = {
         'date-1': '閲覧日',
         'date-2': '高評価日',
@@ -58,9 +56,7 @@ function ChangeFormatDate() {
         let elements = document.getElementsByClassName(key);
         for (let i = 0; i < elements.length; i ++) {
             const date = exchangeToDate(elements[i].innerHTML);
-            console.log(date)
             elements[i].innerHTML = CreateHTML(GetDiffDay(nowDate, date), date, textDic[key]);
-            console.log(textDic[key]);
         }
 
     }
