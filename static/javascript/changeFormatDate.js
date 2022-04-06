@@ -16,6 +16,7 @@ function exchangeToDate(dateString) {
     }
     const day = dateString.slice(index + 2, nextIndex);
     const year = dateString.slice(nextIndex + 2,);
+    console.log(year, month, day);
     return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
 }
 
@@ -26,7 +27,7 @@ function GetDiffDay(nowDate, date) {
     return Math.floor((nowDate - date) / (60 * 60 * 24 * 1000));
 }
 
-function CreateHTML(dif, date) {
+function CreateHTML(dif, date, text) {
     let showDate = '';
     if (dif === 0) {
         showDate = '今日';
@@ -37,19 +38,32 @@ function CreateHTML(dif, date) {
     } else if (dif === 3) {
         showDate = '3日前';
     } else {
-        showDate = date.getFullYear() + '/' + date.getMonth() + 1 + '/' + date.getDate();
+        showDate = date.getFullYear() + '/' + Number(date.getMonth() + 1) + '/' + date.getDate();
     }
 
-    return '投稿日 ' + showDate;
+    return text + ': ' + showDate;
 }
 
 function ChangeFormatDate() {
-    const elements = document.getElementsByClassName('date');
+    console.log('change date')
+    const textDic = {
+        'date-1': '閲覧日',
+        'date-2': '高評価日',
+        'date-3': '追加日',
+        'date-comment': '投稿日',
+        'date-public-article': '投稿日',
+    }
     const nowDate = new Date();
-    for (let i = 0; i < elements.length; i++) {
-        const date = exchangeToDate(elements[i].innerHTML);
-        elements[i].innerHTML = CreateHTML(GetDiffDay(nowDate, date), date)
+    for (let key in textDic) {
+        let elements = document.getElementsByClassName(key);
+        for (let i = 0; i < elements.length; i ++) {
+            const date = exchangeToDate(elements[i].innerHTML);
+            console.log(date)
+            elements[i].innerHTML = CreateHTML(GetDiffDay(nowDate, date), date, textDic[key]);
+            console.log(textDic[key]);
+        }
+
     }
 }
 
-window.onload = ChangeFormatDate
+addEventListener('load', ChangeFormatDate);
