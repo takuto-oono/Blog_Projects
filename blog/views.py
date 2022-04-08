@@ -434,17 +434,12 @@ def get_all_is_read_later(request):
 
 
 def get_category_title_ajax(request):
+    print('get category title ajax')
     category_pk = request.GET.get('category_pk')
-    print('cagegory_pk:' + str(category_pk))
     if models.Category.objects.filter(pk=category_pk):
-        print(models.Category.objects.get(pk=category_pk).title)
         response = {
-            'category_title': models.Category.objects.get(pk=category_pk).title,
+            'category_title': models.Category.objects.get(pk=category_pk).title
         }
         return JsonResponse(response)
-
     else:
-        response = {
-            'category_title': '',
-        }
-        return JsonResponse(response)
+        return JsonResponse({'category_title': ''})
