@@ -439,13 +439,12 @@ def get_category_title_ajax(request):
     if models.Category.objects.filter(pk=category_pk):
         print(models.Category.objects.get(pk=category_pk).title)
         response = {
-            # 'category-title': str(models.Category.objects.get(pk=category_pk).title),
-            'category-title': 'aaaaaaaaaaa'
+            'category_title': models.Category.objects.get(pk=category_pk).title,
         }
         return JsonResponse(response)
 
     else:
         response = {
-            'category-title': '',
+            'category_title': '',
         }
         return JsonResponse(response)
