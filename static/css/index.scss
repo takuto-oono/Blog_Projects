@@ -4,7 +4,7 @@
     display: flex;
 
     #category-list {
-        width: 19%;
+        width: 15%;
         text-align: center;
         border: 3px solid #000000;
         padding: 0.5em 1em;
@@ -12,7 +12,8 @@
 
     #article-list {
         border: 3px solid #000000;
-        width: 69%;
+        width: 70%;
+        text-align: center;
         p {
 
         }
@@ -47,13 +48,18 @@
     }
 
     #recommend-article-list {
+        width: 15%;
         border: 3px solid #000000;
+        text-align: center;
+        margin: 0 auto;
         ul {
-            width: 9%;
+            //width: 15%;
+            //margin: 0 auto;
 
             li {
                 height: 200px;
                 width: 150px;
+                margin: 0 auto;
 
                 img {
                     height: 150px;

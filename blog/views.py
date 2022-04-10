@@ -209,7 +209,7 @@ class ArticleDetail(DetailView):
         if self.request.user.is_authenticated:
             self.write_browsing_history(article)
             context.update({
-                'comments': models.Comment.objects.filter(article=article),
+                'comments': models.Comment.objects.filter(article=article).order_by('-date'),
                 'good_cnt': article.good_count,
                 'good_button_value': self.get_is_good(article),
                 'later_article_list': self.get_later_article_list(),

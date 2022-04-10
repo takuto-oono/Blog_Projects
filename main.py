@@ -25,7 +25,7 @@ def create_users_detail():
     for i in range(20):
         user = {
             'username': 'username' + str(i),
-            "password": 'password' + str(i),
+            "password": 'pdarsosw' + str(i),
         }
         User_list.append(user)
 
@@ -56,19 +56,6 @@ def create_articles_detail():
         public_date -= datetime.timedelta(days=4)
 
 
-def create_comment_detail():
-    for user in User.objects.all():
-        for article in Article.objects.all():
-            flag = random.randint(0, 4)
-            if flag == 1:
-                Comment_list.append({
-                    'content': 'comment content' + random.randint(0, 10000),
-                    'article': article,
-                    'user': user,
-
-                })
-
-
 def register_user_article_relationship(user, article, action, date):
     User_article_relationship_list.append({
         'user': user,
@@ -94,6 +81,22 @@ def create_user_article_relationships_detail():
                 register_user_article_relationship(user, article, 3, date)
 
             date -= datetime.timedelta(days=random.randint(0, 3))
+
+
+def create_comment_detail():
+    for user in User.objects.all():
+        if user.username == 'admin':
+            continue
+        date = datetime.datetime.now()
+        for article in Article.objects.all():
+            date -= datetime.timedelta(days=random.randint(0, 2))
+            Comment_list.append({
+                'content': str(article.title) + str(user.username),
+                'article': article,
+                'user': user,
+                'date': date,
+                'comment_goods': random.randint(0, 5)
+            })
 
 
 def create_users():
@@ -140,6 +143,17 @@ def create_user_article_relationships():
         user_article_relationship.save()
 
 
+def create_comment():
+    for comment_detail in Comment_list:
+        comment = Comment()
+        comment.content = comment_detail['content']
+        comment.article = comment_detail['article']
+        comment.user = comment_detail['user']
+        comment.date = comment_detail['date']
+        comment.comment_goods = comment_detail['comment_goods']
+        comment.save()
+
+
 def register_good_count():
     for article in Article.objects.all():
         cnt = 0
@@ -152,8 +166,8 @@ def register_good_count():
 
 
 if __name__ == '__main__':
-    create_users_detail()
-    create_users()
+    # create_users_detail()
+    # create_users()
     print('create user')
     time.sleep(2)
     create_categories_detail()
@@ -168,3 +182,5 @@ if __name__ == '__main__':
     create_user_article_relationships()
     print('create relationship')
     register_good_count()
+    create_comment_detail()
+    create_comment()

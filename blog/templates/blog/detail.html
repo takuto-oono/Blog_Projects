@@ -53,16 +53,20 @@
             </div>
         </div>
         <div id="later-article-list">
-            {% for article in later_article_list %}
-                <li>
-                    <img src="{{ article.picture.url }}"/>
-                    <a href="{% url 'detail_article' article.pk %}">
-                        <p>{{ article.title }}</p>
-                    </a>
-                    <input type="button" value="後で読む" onclick="ReadLaterAjax({{ article.pk }})">
+            <ul>
+                {% for article in later_article_list %}
+                    <li id="{{ article.pk }}">
+                        <img src="{{ article.picture.url }}"/>
+                        <a href="{% url 'detail_article' article.pk %}">
+                            <p>{{ article.title }}</p>
+                        </a>
+                        <input name="read-later-button" type="button" value="後で読む"
+                               onclick="ReadLaterAjax({{ article.pk }})">
 
-                </li>
-            {% endfor %}
+                    </li>
+
+                {% endfor %}
+            </ul>
         </div>
     </div>
     <script>
@@ -189,7 +193,6 @@
                     if (response['is_redirect']) {
                         location.href = '/account/login'
                     }
-
 
 
                 });
