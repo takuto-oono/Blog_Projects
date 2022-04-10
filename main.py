@@ -166,8 +166,8 @@ def register_good_count():
 
 
 if __name__ == '__main__':
-    create_users_detail()
-    create_users()
+    # create_users_detail()
+    # create_users()
     print('create user')
     time.sleep(2)
     create_categories_detail()
