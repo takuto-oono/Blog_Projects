@@ -57,17 +57,19 @@
             //margin: 0 auto;
 
             li {
-                height: 200px;
-                width: 150px;
+                width: 90%;
                 margin: 0 auto;
 
                 img {
-                    height: 150px;
-                    width: 150px;
+                    width: 100%;
                 }
 
                 .link {
 
+                }
+
+                input {
+                    width: 100%;
                 }
             }
         }

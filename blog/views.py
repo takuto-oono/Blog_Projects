@@ -1,6 +1,6 @@
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 from . import models
-from django.shortcuts import get_object_or_404, redirect, HttpResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required

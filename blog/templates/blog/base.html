@@ -86,22 +86,18 @@
     });
 
     function ExchangeReadLaterButtonValueToFalse(articlePk, divId) {
-        console.log('articlepk' + articlePk);
-        console.log(divId)
         if (document.querySelector(divId) === null) {
             return;
         }
         const liList = document.querySelector(divId).querySelector('ul').querySelectorAll('li');
-        console.log(liList)
         for (let i = 0; i < liList.length; i++) {
             if (liList[i].id === articlePk.toString()) {
-                liList[i].querySelector("input[name='read-later-button']").value = '後で読む'
+                liList[i].querySelector("input[name='read-later-button']").value = '後で読む';
             }
         }
     }
 
     function ReadLaterAjax(articlePk) {
-        console.log('readlaterAjax');
         $.ajax({
             'type': 'POST',
             'url': "{% url 'read_later_ajax' %}",
@@ -111,20 +107,19 @@
             'dataType': 'json',
         })
             .done(response => {
-                console.log(response['read_later'])
+
                 if (response['is_redirect']) {
-                    location.href = '/account/login'
+                    location.href = '/account/login';
                 } else {
                     if (response['read_later']) {
-                        ExchangeReadLaterButtonValueToTrue([articlePk], '#article-list')
-                        ExchangeReadLaterButtonValueToTrue([articlePk], '#recommend-article-list')
-                        ExchangeReadLaterButtonValueToTrue([articlePk], '#later-article-list')
+                        ExchangeReadLaterButtonValueToTrue([articlePk], '#article-list');
+                        ExchangeReadLaterButtonValueToTrue([articlePk], '#recommend-article-list');
+                        ExchangeReadLaterButtonValueToTrue([articlePk], '#later-article-list');
 
                     } else {
-                        ExchangeReadLaterButtonValueToFalse(articlePk, '#article-list')
-                        ExchangeReadLaterButtonValueToFalse(articlePk, '#recommend-article-list')
-                        console.log('-----------------------------------------------')
-                        ExchangeReadLaterButtonValueToFalse(articlePk, '#later-article-list')
+                        ExchangeReadLaterButtonValueToFalse(articlePk, '#article-list');
+                        ExchangeReadLaterButtonValueToFalse(articlePk, '#recommend-article-list');
+                        ExchangeReadLaterButtonValueToFalse(articlePk, '#later-article-list');
                     }
                 }
 
@@ -141,7 +136,7 @@
         for (let i = 0; i < liList.length; i++) {
             for (let j = 0; j < readLaterList.length; j++) {
                 if (liList[i].id === readLaterList[j].toString()) {
-                    liList[i].querySelector("input[name='read-later-button']").value = '後で読むリストに追加済み'
+                    liList[i].querySelector("input[name='read-later-button']").value = '追加済み';
 
                     break;
                 }
@@ -159,20 +154,17 @@
         })
             .done(response => {
                 if (response['is_authenticated']) {
-                    const readLaterList = response['read_later_list']
-                    ExchangeReadLaterButtonValueToTrue(readLaterList, '#article-list')
-                    ExchangeReadLaterButtonValueToTrue(readLaterList, '#recommend-article-list')
-                    ExchangeReadLaterButtonValueToTrue(readLaterList, '#later-article-list')
+                    const readLaterList = response['read_later_list'];
+                    ExchangeReadLaterButtonValueToTrue(readLaterList, '#article-list');
+                    ExchangeReadLaterButtonValueToTrue(readLaterList, '#recommend-article-list');
+                    ExchangeReadLaterButtonValueToTrue(readLaterList, '#later-article-list');
                 }
             })
     }
 
-    addEventListener('load', GetAllReadLaterAjax)
+    addEventListener('load', GetAllReadLaterAjax);
 
 
 </script>
-
-
-
 </body>
 </html>

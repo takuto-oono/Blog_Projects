@@ -15,22 +15,13 @@
             <div id="article-header">
                 <img src="{{ article.picture.url }}"/>
                 <p id="article-title">{{ article.title }}</p>
-                <a class="right" href="{% url 'category' article.category.pk %}">{{ article.category.title }}</a>
-                <p class="right">いいね</p>
-                <p id="good-count">{{ article.good_count }}</p>
-                <p>投稿日</p>
+                <a href="{% url 'category' article.category.pk %}">{{ article.category.title }}</a>
+                <p id="good-count">いいねの数 {{ article.good_count }}</p>
                 <p class="date-public-article">{{ article.public_date }}</p>
-                <ul>
-                    <li>
-                        <input name="good-button" type="button" value={{ good_button_value }} onclick="DoGoodAjax()">
-                    </li>
-                    <li>
-                        <input type="button" value="後で読む" onclick="ReadLaterAjax({{ article.pk }})">
-                    </li>
-                    <li>
-                        <a href="{% url 'create_comment' article.pk %}">コメントを書く</a>
-                    </li>
-                </ul>
+                <input name="good-button" type="button" value={{ good_button_value }} onclick="DoGoodAjax()"><br>
+                <a href="{% url 'create_comment' article.pk %}">コメントを書く</a>
+
+
             </div>
             <div id="content-article">
                 <p>{{ article.content }}</p>
@@ -78,8 +69,8 @@
                 'dataType': 'json',
             })
                 .done(response => {
-                    console.log(response['good_count'])
-                    $('#good-count').html("<p>" + response['good_count'] + "</p>")
+                    console.log(response['good_count']);
+                    $('#good-count').html("<p>いいねの数 " + response['good_count'] + "</p>");
                 });
         }
 
@@ -118,8 +109,8 @@
         });
 
         function AddDeleteClass(comment_pk) {
-            console.log('AddClass')
-            document.getElementById(comment_pk).classList.add('delete-comment')
+            console.log('AddClass');
+            document.getElementById(comment_pk).classList.add('delete-comment');
         }
 
         function DeleteCommentAjax(comment_pk) {
@@ -134,11 +125,8 @@
             })
                 .done(response => {
                     console.log(response['message']);
-                    document.getElementById(comment_pk).innerHTML = response['message']
+                    document.getElementById(comment_pk).innerHTML = response['message'];
                     const timer = setTimeout(AddDeleteClass, 2000, comment_pk);
-                    console.log('exit');
-
-
                 });
         }
     </script>
@@ -182,7 +170,7 @@
                 'dataType': 'json',
             })
                 .done(response => {
-                    $('#good-count').html("<p>" + response['good_count'] + "</p>");
+                    $('#good-count').html("<p>いいねの数 " + response['good_count'] + "</p>");
                     const button = document.querySelector("input[name='good-button']");
                     if (response['is_good']) {
                         button.value = '高評価を外す';
@@ -191,10 +179,8 @@
                     }
 
                     if (response['is_redirect']) {
-                        location.href = '/account/login'
+                        location.href = '/account/login';
                     }
-
-
                 });
         }
 

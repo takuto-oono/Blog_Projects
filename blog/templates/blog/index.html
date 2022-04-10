@@ -90,13 +90,13 @@
     </div>
     <script>
         function CreateCategoryPkList() {
-            const categoryPkList = []
-            const eList = document.getElementsByClassName('change-category-title')
+            const categoryPkList = [];
+            const eList = document.getElementsByClassName('change-category-title');
             for (let i = 0; i < eList.length; i++) {
-                categoryPkList.push(eList[i].innerHTML)
+                categoryPkList.push(eList[i].innerHTML);
             }
-            console.log(categoryPkList)
-            return categoryPkList
+            console.log(categoryPkList);
+            return categoryPkList;
         }
 
         function ExchangeCategoryTitleFromId() {
@@ -112,14 +112,14 @@
                     'dataType': 'json',
                 })
                     .done(response => {
-                        console.log(response)
+                        console.log(response);
                         console.log(response['category_title']);
                         e.innerHTML = response['category_title'];
                     })
             }
         }
 
-        addEventListener('load', ExchangeCategoryTitleFromId)
+        addEventListener('load', ExchangeCategoryTitleFromId);
 
     </script>
 

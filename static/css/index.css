@@ -42,13 +42,14 @@
   margin: 0 auto;
 }
 #index #recommend-article-list ul li {
-  height: 200px;
-  width: 150px;
+  width: 90%;
   margin: 0 auto;
 }
 #index #recommend-article-list ul li img {
-  height: 150px;
-  width: 150px;
+  width: 100%;
+}
+#index #recommend-article-list ul li input {
+  width: 100%;
 }
 
 /*# sourceMappingURL=index.css.map */
