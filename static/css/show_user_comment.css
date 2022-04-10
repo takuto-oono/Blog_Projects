@@ -1,0 +1,14 @@
+#show-user-comment {
+  margin: 0 auto;
+  text-align: center;
+}
+#show-user-comment ul {
+  margin: 0 auto;
+  margin-top: 30px;
+  width: 70%;
+}
+#show-user-comment ul li {
+  border: 3px solid #000000;
+}
+
+/*# sourceMappingURL=show_user_comment.css.map */

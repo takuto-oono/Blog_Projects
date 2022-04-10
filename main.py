@@ -25,7 +25,7 @@ def create_users_detail():
     for i in range(20):
         user = {
             'username': 'username' + str(i),
-            "password": 'password' + str(i),
+            "password": 'pdarsosw' + str(i),
         }
         User_list.append(user)
 
@@ -99,7 +99,6 @@ def create_comment_detail():
             })
 
 
-
 def create_users():
     for user_detail in User_list:
         user = User()
@@ -155,7 +154,6 @@ def create_comment():
         comment.save()
 
 
-
 def register_good_count():
     for article in Article.objects.all():
         cnt = 0
@@ -170,20 +168,19 @@ def register_good_count():
 if __name__ == '__main__':
     # create_users_detail()
     # create_users()
-    # print('create user')
-    # time.sleep(2)
-    # create_categories_detail()
-    # create_categories()
-    # print('create category')
-    # time.sleep(2)
-    # create_articles_detail()
-    # create_articles()
-    # print('create article')
-    # time.sleep(2)
-    # create_user_article_relationships_detail()
-    # create_user_article_relationships()
-    # print('create relationship')
-    # register_good_count()
+    print('create user')
+    time.sleep(2)
+    create_categories_detail()
+    create_categories()
+    print('create category')
+    time.sleep(2)
+    create_articles_detail()
+    create_articles()
+    print('create article')
+    time.sleep(2)
+    create_user_article_relationships_detail()
+    create_user_article_relationships()
+    print('create relationship')
+    register_good_count()
     create_comment_detail()
     create_comment()
-
